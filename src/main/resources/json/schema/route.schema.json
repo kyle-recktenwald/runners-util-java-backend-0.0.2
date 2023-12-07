@@ -1,0 +1,33 @@
+{
+  "$id": "https://runnersutil.com/route.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Route",
+  "description": "The schema for an object representing a user's created route.",
+  "type": "object",
+  "required": [ "routeId" ],
+  "properties": {
+    "routeId": {
+      "type": "string",
+      "description": "Universally Unique Identifier (UUID) for the run.",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The user's name for the route."
+    },
+    "distance": {
+      "type": "integer",
+      "description": "The distance of the route in meters."
+    },
+    "createDate": {
+      "type": "string",
+      "description": "The creation date and time of the route.",
+      "format": "date-time"
+    },
+    "updateDate": {
+      "type": "string",
+      "description": "The last updated date and time of the route.",
+      "format": "date-time"
+    }
+  }
+}

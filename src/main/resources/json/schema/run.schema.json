@@ -1,0 +1,41 @@
+{
+  "$id": "https://runnerutils.com/run.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Run",
+  "description": "The schema for an object representing a user's recorded run.",
+  "type": "object",
+  "required": [ "runId" ],
+  "properties": {
+    "runId": {
+      "type": "string",
+      "description": "Universally Unique Identifier (UUID) for the run."
+    },
+    "dateTime": {
+      "type": "string",
+      "description": "The time and date of the run.",
+      "format": "date-time"
+    },
+    "distance": {
+      "type": "integer",
+      "description": "The distance of the run in meters."
+    },
+    "duration": {
+      "description": "The duration of the run in milliseconds",
+      "type": "duration"
+    },
+    "route": {
+      "description": "The URI of the run's route.",
+      "$ref": "https://runnerutils.com/route.schema.json",
+      "format": "uri-reference"},
+    "createDate": {
+      "type": "date-time",
+      "description": "The creation date and time of the run.",
+      "format": "date-time"
+    },
+    "updateDate": {
+      "type": "date-time",
+      "description": "The last updated date and time of the run.",
+      "format": "date-time"
+    }
+  }
+}

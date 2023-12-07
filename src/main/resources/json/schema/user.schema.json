@@ -1,0 +1,24 @@
+{
+  "$id": "https://runnerutils.com/user.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "User",
+  "description": "The schema for an object representing a user.",
+  "type": "object",
+  "required": [ "userId" ],
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "Universally Unique Identifier (UUID) for the user."
+    },
+    "createDate": {
+      "type": "string",
+      "description": "The creation date and time of the user.",
+      "format": "date-time"
+    },
+    "updateDate": {
+      "type": "string",
+      "description": "The last updated date and time of the user.",
+      "format": "date-time"
+    }
+  }
+}
