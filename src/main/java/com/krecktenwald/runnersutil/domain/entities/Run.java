@@ -32,9 +32,8 @@ public class Run extends AbstractCRUDEntity {
   @Column(name = "start_date_time")
   private Date startDateTime;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "end_date_time")
-  private Date endDateTime;
+  @Column(name = "duration")
+  private Long duration;
 
   @ManyToOne
   @JoinColumn(name = "route_id")

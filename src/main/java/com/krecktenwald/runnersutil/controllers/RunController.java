@@ -99,8 +99,8 @@ public class RunController {
       currentRun.setStartDateTime(runDTO.getStartDateTime());
     }
 
-    if (runDTO.getEndDateTime() != null) {
-      currentRun.setStartDateTime(runDTO.getEndDateTime());
+    if (runDTO.getDuration() != null) {
+      currentRun.setDuration(runDTO.getDuration());
     }
 
     if (runDTO.getUserId() != null) {

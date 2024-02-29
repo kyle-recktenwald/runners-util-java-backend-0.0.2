@@ -16,9 +16,7 @@ public class RunDTO extends AbstractCRUDEntityDTO {
   @Column(name = "start_date_time")
   private Date startDateTime;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(name = "end_date_time")
-  private Date endDateTime;
+  private Long duration;
 
   private Integer distance;
 

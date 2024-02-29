@@ -51,7 +51,7 @@ public class DTOMapperImpl implements DTOMapper {
     runDTO.setRunId(run.getRunId());
     runDTO.setDistance(run.getDistance());
     runDTO.setStartDateTime(run.getStartDateTime());
-    runDTO.setEndDateTime(run.getEndDateTime());
+    runDTO.setDuration(run.getDuration());
 
     return runDTO;
   }

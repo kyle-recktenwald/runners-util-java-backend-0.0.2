@@ -1,43 +1,65 @@
 package com.krecktenwald.runnersutil.config;
 
 import com.krecktenwald.runnersutil.security.JwtAuthConverter;
+import com.krecktenwald.runnersutil.security.KeycloakRoleConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @Configuration
-//@EnableWebSecurity
-//@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableWebSecurity
 public class SecurityConfig {
   public static final String ADMIN = "admin";
   public static final String USER = "user";
+  public static final String DEVELOPER = "developer";
 
   private final JwtAuthConverter jwtAuthConverter;
 
-  /*@Bean
+  @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(
-            authorize ->
-                authorize
-                    .requestMatchers(
-                        HttpMethod.GET,
-                        "/api/auth/user-role/is-anonymous",
-                        "/api/auth/user-role/is-anonymous/**")
-                    .permitAll()
-                    .requestMatchers(
-                        HttpMethod.GET,
-                        "/api/auth/user-role/is-admin",
-                        "/api/auth/user-role/is-admin/**")
-                    .hasRole(ADMIN)
-                    .requestMatchers(HttpMethod.GET, "/api/auth/user-role/is-user")
-                    .hasAnyRole(ADMIN, USER)
-                    .anyRequest()
-                    .authenticated())
-        .formLogin(formLogin -> formLogin.loginPage("/login").permitAll())
-        .rememberMe(Customizer.withDefaults());
+    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter());
+
+    http.cors().and()
+      .authorizeHttpRequests(authorize ->
+        authorize
+          .requestMatchers(
+            HttpMethod.GET,
+            "/api/admin",
+            "/api/admin/**")
+            .hasRole(ADMIN)
+          .requestMatchers(
+            HttpMethod.GET,
+            "/api/runs",
+            "/api/runs/**")
+            .hasRole(USER)
+        .anyRequest()
+        .authenticated())
+          .oauth2ResourceServer(
+            oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 
     return http.build();
-  }*/
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.applyPermitDefaultValues();
+    configuration.addAllowedMethod(HttpMethod.OPTIONS); // Allow OPTIONS method
+    // Add other CORS configuration as needed
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 }
