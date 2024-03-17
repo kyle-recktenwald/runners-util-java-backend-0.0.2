@@ -4,7 +4,6 @@ import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDTO;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
-import com.krecktenwald.runnersutil.repositories.UserRepository;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,15 +13,8 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -30,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RouteController {
 
   private final RouteRepository routeRepository;
-
-  @Autowired private UserRepository userRepository;
 
   @Autowired private DTOMapper dtoMapper;
 
@@ -49,6 +39,17 @@ public class RouteController {
     return routeDTOs;
   }
 
+  @PostMapping("/by-user")
+  @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
+  public Set<RouteDTO> getRoutesByUserId(@RequestParam String userId) {
+    Set<RouteDTO> routeDtos = new HashSet<>();
+    for (Route route : routeRepository.findAllByUserId(userId)) {
+      routeDtos.add(convertRouteToDTO(route));
+    }
+
+    return routeDtos;
+  }
+
   @GetMapping("/{id}")
   public RouteDTO getRoute(@PathVariable String id) {
     return convertRouteToDTO(routeRepository.findById(id).orElseThrow(RuntimeException::new));
@@ -61,14 +62,12 @@ public class RouteController {
     route.setRouteId(String.format("route_%s", UUID.randomUUID()));
     route.setCreateDate(new Date());
 
-    if (routeDTO.getRouteOwnerId() != null) {
-      route.setRouteOwner(
-          userRepository.findById(routeDTO.getRouteOwnerId()).orElseThrow(RuntimeException::new));
+    if (routeDTO.getUserId() != null) {
+      route.setUserId(routeDTO.getUserId());
     }
 
     Route savedRoute = routeRepository.save(route);
     RouteDTO savedRouteDTO = convertRouteToDTO(savedRoute);
-    savedRouteDTO.setRouteOwnerId(savedRoute.getRouteOwner().getUserId());
 
     return ResponseEntity.created(new URI("/routes/" + savedRouteDTO.getRouteId()))
         .body(savedRouteDTO);
@@ -85,9 +84,8 @@ public class RouteController {
     if (routeDTO.getDistance() != null) {
       existingRoute.setDistance(routeDTO.getDistance());
     }
-    if (routeDTO.getRouteOwnerId() != null) {
-      existingRoute.setRouteOwner(
-          userRepository.findById(routeDTO.getRouteOwnerId()).orElseThrow(RuntimeException::new));
+    if (routeDTO.getUserId() != null) {
+      existingRoute.setUserId(routeDTO.getUserId());
     }
 
     existingRoute.setUpdateDate(new Date());
@@ -102,12 +100,6 @@ public class RouteController {
   }
 
   private RouteDTO convertRouteToDTO(Route route) {
-    RouteDTO routeDTO = dtoMapper.routeToRouteDTO(route);
-
-    if (route.getRouteOwner() != null && route.getRouteOwner().getUserId() != null) {
-      routeDTO.setRouteOwnerId(route.getRouteOwner().getUserId());
-    }
-
-    return routeDTO;
+    return dtoMapper.routeToRouteDTO(route);
   }
 }

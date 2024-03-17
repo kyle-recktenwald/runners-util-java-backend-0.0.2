@@ -13,9 +13,6 @@ import lombok.Data;
 @MappedSuperclass
 @Data
 public abstract class AbstractCRUDEntity {
-  @Enumerated(EnumType.STRING)
-  private CrudStatus crudStatus;
-
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date", nullable = false)
   private Date createDate;
@@ -24,7 +21,9 @@ public abstract class AbstractCRUDEntity {
   @Column(name = "update_date")
   private Date updateDate;
 
-  @ManyToOne private User createdBy;
+  private String createdByUserId;
 
-  @ManyToOne private User updatedBy;
+  private String updatedByUserId;
+
+  private Boolean isDeleted;
 }

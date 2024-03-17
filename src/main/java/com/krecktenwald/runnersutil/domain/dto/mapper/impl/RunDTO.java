@@ -18,7 +18,7 @@ public class RunDTO extends AbstractCRUDEntityDTO {
 
   private Long duration;
 
-  private Integer distance;
+  private Double distance;
 
   private String userId;
 

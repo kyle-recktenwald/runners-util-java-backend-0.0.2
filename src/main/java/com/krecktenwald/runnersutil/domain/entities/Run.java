@@ -26,7 +26,7 @@ public class Run extends AbstractCRUDEntity {
   private String runId;
 
   @Column(name = "distance")
-  private Integer distance;
+  private Double distance;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "start_date_time")
@@ -39,5 +39,5 @@ public class Run extends AbstractCRUDEntity {
   @JoinColumn(name = "route_id")
   private Route route;
 
-  @ManyToOne private User runOwner;
+  private String userId;
 }

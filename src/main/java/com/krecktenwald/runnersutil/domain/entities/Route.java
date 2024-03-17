@@ -27,9 +27,9 @@ public class Route extends AbstractCRUDEntity {
   private String name;
 
   @Column(name = "distance")
-  private Integer distance;
+  private Double distance;
 
-  @ManyToOne private User routeOwner;
+  private String userId;
 
   @OneToMany(mappedBy = "route")
   private Set<Run> runs;

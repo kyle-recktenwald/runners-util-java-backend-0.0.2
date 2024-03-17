@@ -4,10 +4,8 @@ import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDTO;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
-import com.krecktenwald.runnersutil.domain.entities.User;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
 import com.krecktenwald.runnersutil.repositories.RunRepository;
-import com.krecktenwald.runnersutil.repositories.UserRepository;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,7 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +32,9 @@ public class RunController {
 
   private final RunRepository runRepository;
 
-  @Autowired private UserRepository userRepository;
-
   @Autowired private RouteRepository routeRepository;
 
-  @Autowired DTOMapper dtoMapper;
+  @Autowired private DTOMapper dtoMapper;
 
   public RunController(RunRepository runRepository) {
     this.runRepository = runRepository;
@@ -68,8 +63,7 @@ public class RunController {
     run.setCreateDate(new Date());
 
     if (runDTO.getUserId() != null) {
-      User user = userRepository.findById(runDTO.getUserId()).orElseThrow(RuntimeException::new);
-      run.setRunOwner(user);
+      run.setUserId(runDTO.getUserId());
     }
 
     if (runDTO.getRouteId() != null) {
@@ -81,7 +75,6 @@ public class RunController {
     Run createdRun = runRepository.save(run);
     RunDTO createdRunDTO = dtoMapper.runToRunDTO(createdRun);
 
-    createdRunDTO.setUserId(createdRun.getRunOwner().getUserId());
     createdRunDTO.setRouteId(createdRun.getRoute().getRouteId());
 
     return ResponseEntity.created(new URI("/runs/" + createdRunDTO.getRunId())).body(createdRunDTO);
@@ -104,8 +97,7 @@ public class RunController {
     }
 
     if (runDTO.getUserId() != null) {
-      User user = userRepository.findById(runDTO.getUserId()).orElseThrow(RuntimeException::new);
-      currentRun.setRunOwner(user);
+      currentRun.setUserId(runDTO.getUserId());
     }
 
     if (runDTO.getRouteId() != null) {
@@ -117,15 +109,11 @@ public class RunController {
     Run updatedRun = runRepository.save(currentRun);
 
     RunDTO updatedRunDTO = dtoMapper.runToRunDTO(updatedRun);
-
-    updatedRunDTO.setUserId(updatedRun.getRunOwner().getUserId());
     updatedRunDTO.setRouteId(updatedRun.getRoute().getRouteId());
 
     return ResponseEntity.ok(updatedRunDTO);
   }
 
-  // @Secured("ROLE_ADMIN")
-  @PostAuthorize("hasRole('ADMIN') or #id == authentication.name")
   @DeleteMapping("/{id}")
   public ResponseEntity<RunDTO> deleteRun(@PathVariable String id) {
     runRepository.deleteById(id);
@@ -134,10 +122,6 @@ public class RunController {
 
   private RunDTO convertRunToDTO(Run run) {
     RunDTO runDTO = dtoMapper.runToRunDTO(run);
-
-    if (run.getRunOwner() != null && run.getRunOwner().getUserId() != null) {
-      runDTO.setUserId(run.getRunOwner().getUserId());
-    }
 
     if (run.getRoute() != null && run.getRoute().getRouteId() != null) {
       runDTO.setRouteId(run.getRoute().getRouteId());

@@ -12,9 +12,9 @@ public class RouteDTO extends AbstractCRUDEntityDTO {
 
   private String name;
 
-  private Integer distance;
+  private Double distance;
 
   private Set<String> runIds;
 
-  private String routeOwnerId;
+  private String userId;
 }
