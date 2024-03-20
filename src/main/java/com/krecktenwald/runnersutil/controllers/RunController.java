@@ -43,6 +43,7 @@ public class RunController {
   }
 
   @GetMapping
+  @PreAuthorize("hasRole('ROLE_app_admin')")
   public Set<RunDTO> getRuns() {
     Set<RunDTO> runDTOs = new HashSet<>();
     for (Run run : runRepository.findAll()) {
