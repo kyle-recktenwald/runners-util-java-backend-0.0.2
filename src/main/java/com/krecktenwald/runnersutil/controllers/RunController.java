@@ -1,6 +1,7 @@
 package com.krecktenwald.runnersutil.controllers;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.CreateRunDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDTO;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,20 +58,38 @@ public class RunController {
   }
 
   @PostMapping
-  public ResponseEntity<RunDTO> createRun(@RequestBody @Valid RunDTO runDTO)
+  @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
+  public ResponseEntity<RunDTO> createRun(@RequestBody @Valid CreateRunDto createRunDto)
       throws URISyntaxException {
-    Run run = dtoMapper.runDTOToRun(runDTO);
+    Run run = new Run();
     run.setRunId(String.format("run_%s", UUID.randomUUID()));
     run.setCreateDate(new Date());
+    run.setIsDeleted(false);
 
-    if (runDTO.getUserId() != null) {
-      run.setUserId(runDTO.getUserId());
+    if (createRunDto.getUserId() != null) {
+      run.setUserId(createRunDto.getUserId());
     }
 
-    if (runDTO.getRouteId() != null) {
+    if(createRunDto.getCreatedByUserId() != null){
+      run.setCreatedByUserId(createRunDto.getCreatedByUserId());
+    }
+
+    if (createRunDto.getRouteId() != null) {
       Route route =
-          routeRepository.findById(runDTO.getRouteId()).orElseThrow(RuntimeException::new);
+          routeRepository.findById(createRunDto.getRouteId()).orElseThrow(RuntimeException::new);
       run.setRoute(route);
+    }
+
+    if(createRunDto.getDuration() != null){
+      run.setDuration(createRunDto.getDuration());
+    }
+
+    if(createRunDto.getDistance() != null){
+      run.setDistance(createRunDto.getDistance());
+    }
+
+    if(createRunDto.getStartDateTime() != null){
+      run.setStartDateTime(createRunDto.getStartDateTime());
     }
 
     Run createdRun = runRepository.save(run);

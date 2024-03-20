@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DTOMapperImpl implements DTOMapper {
-
-
   @Override
   public RouteDTO routeToRouteDTO(Route route) {
     RouteDTO routeDTO = new RouteDTO();
+    routeDTO.setUserId(route.getUserId());
     routeDTO.setRouteId(route.getRouteId());
     routeDTO.setName(route.getName());
     routeDTO.setDistance(route.getDistance());
@@ -27,6 +26,7 @@ public class DTOMapperImpl implements DTOMapper {
   public RunDTO runToRunDTO(Run run) {
     RunDTO runDTO = new RunDTO();
     runDTO.setRunId(run.getRunId());
+    runDTO.setUserId(run.getUserId());
     runDTO.setDistance(run.getDistance());
     runDTO.setStartDateTime(run.getStartDateTime());
     runDTO.setDuration(run.getDuration());
