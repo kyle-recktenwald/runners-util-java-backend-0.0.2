@@ -71,7 +71,7 @@ public class RunController {
       run.setUserId(createRunDto.getUserId());
     }
 
-    if(createRunDto.getCreatedByUserId() != null){
+    if (createRunDto.getCreatedByUserId() != null) {
       run.setCreatedByUserId(createRunDto.getCreatedByUserId());
     }
 
@@ -81,15 +81,15 @@ public class RunController {
       run.setRoute(route);
     }
 
-    if(createRunDto.getDuration() != null){
+    if (createRunDto.getDuration() != null) {
       run.setDuration(createRunDto.getDuration());
     }
 
-    if(createRunDto.getDistance() != null){
+    if (createRunDto.getDistance() != null) {
       run.setDistance(createRunDto.getDistance());
     }
 
-    if(createRunDto.getStartDateTime() != null){
+    if (createRunDto.getStartDateTime() != null) {
       run.setStartDateTime(createRunDto.getStartDateTime());
     }
 

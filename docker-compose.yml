@@ -1,0 +1,84 @@
+services:
+  postgresql:
+    container_name: postgresql
+    hostname: postgresql
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: runners_util_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - runners_util_network
+    restart: always
+
+  auth-service:
+    image: bitnami/keycloak:latest
+    container_name: auth-service
+    hostname: auth-service
+    environment:
+      JAVA_OPTS: >
+        -Dkeycloak.migration.action=import
+        -Dkeycloak.migration.provider=singleFile
+        -Dkeycloak.migration.file=/opt/bitnami/keycloak/realm-export.json
+      DB_VENDOR: postgres
+      DB_ADDR: postgresql
+      DB_PORT: 5432
+      DB_SCHEMA: public
+      DB_DATABASE: runners_util_db
+      DB_USER: admin
+      DB_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_USER: developer
+      KEYCLOAK_PASSWORD: developer
+      KC_PROXY_MODE: edge
+      KC_METRICS_ENABLED: true
+      KC_HTTP_ENABLED: true
+      KC_HTTP_PORT: 8180
+    networks:
+      - runners_util_network
+    ports:
+      - "8180:8180"
+    depends_on:
+      - postgresql
+    volumes:
+      - ./realm-export.json:/opt/bitnami/keycloak/realm-export.json
+    restart: always
+
+  backend-service:
+    build: .
+    container_name: backend-service
+    hostname: backend-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/runners_util_db?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    restart: always
+    networks:
+      - runners_util_network
+
+  frontend-service:
+    build: ~/Desktop/Repositories/Runner-Utils/runners-util-react-frontend-0.0.4
+    container_name: frontend-service
+    hostname: frontend-service
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend-service
+    networks:
+      - runners_util_network
+    restart: always
+
+networks:
+  runners_util_network:
+    name: runners_util_network
+    driver: bridge

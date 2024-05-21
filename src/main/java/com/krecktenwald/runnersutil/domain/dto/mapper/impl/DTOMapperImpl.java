@@ -3,10 +3,8 @@ package com.krecktenwald.runnersutil.domain.dto.mapper.impl;
 import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
-
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -88,5 +86,4 @@ public class DTOMapperImpl implements DTOMapper {
   public List<Run> runDTOsToRuns(List<RunDTO> runDTOs) {
     return null;
   }
-
 }

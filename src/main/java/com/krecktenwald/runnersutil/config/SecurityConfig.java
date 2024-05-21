@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,23 +31,20 @@ public class SecurityConfig {
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeycloakRoleConverter());
 
-    http.cors().and()
-      .authorizeHttpRequests(authorize ->
-        authorize
-          .requestMatchers(
-            HttpMethod.GET,
-            "/api/admin",
-            "/api/admin/**")
-            .hasRole(ADMIN)
-          .requestMatchers(
-            HttpMethod.GET,
-            "/api/runs",
-            "/api/runs/**")
-            .hasRole(USER)
-        .anyRequest()
-        .authenticated())
-          .oauth2ResourceServer(
-            oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+    http.cors()
+        .and()
+        .authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers(HttpMethod.GET, "/api/admin", "/api/admin/**")
+                    .hasRole(ADMIN)
+                    .requestMatchers(HttpMethod.GET, "/api/runs", "/api/runs/**")
+                    .hasRole(USER)
+                    .anyRequest()
+                    .authenticated())
+        .oauth2ResourceServer(
+            oauth2 ->
+                oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 
     return http.build();
   }
