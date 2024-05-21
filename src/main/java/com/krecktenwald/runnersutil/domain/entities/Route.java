@@ -1,11 +1,6 @@
 package com.krecktenwald.runnersutil.domain.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class Route extends AbstractCRUDEntity {
+public class Route {
   @Id
   @GenericGenerator(name = "route_id", strategy = "uuid2")
   private String routeId;
@@ -32,4 +27,6 @@ public class Route extends AbstractCRUDEntity {
 
   @OneToMany(mappedBy = "route")
   private Set<Run> runs;
+
+  @Embedded private CrudEntityInfo crudEntityInfo;
 }

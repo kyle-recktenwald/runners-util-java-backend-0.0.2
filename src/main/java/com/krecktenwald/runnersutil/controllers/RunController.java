@@ -64,15 +64,15 @@ public class RunController {
       throws URISyntaxException {
     Run run = new Run();
     run.setRunId(String.format("run_%s", UUID.randomUUID()));
-    run.setCreateDate(new Date());
-    run.setIsDeleted(false);
+    run.getCrudEntityInfo().setCreateDate(new Date());
+    run.getCrudEntityInfo().setIsDeleted(false);
 
     if (createRunDto.getUserId() != null) {
       run.setUserId(createRunDto.getUserId());
     }
 
     if (createRunDto.getCreatedByUserId() != null) {
-      run.setCreatedByUserId(createRunDto.getCreatedByUserId());
+      run.getCrudEntityInfo().setCreatedBy(createRunDto.getCreatedByUserId());
     }
 
     if (createRunDto.getRouteId() != null) {
@@ -126,7 +126,7 @@ public class RunController {
       currentRun.setRoute(route);
     }
 
-    currentRun.setUpdateDate(new Date());
+    currentRun.getCrudEntityInfo().setUpdateDate(new Date());
     Run updatedRun = runRepository.save(currentRun);
 
     RunDTO updatedRunDTO = dtoMapper.runToRunDTO(updatedRun);

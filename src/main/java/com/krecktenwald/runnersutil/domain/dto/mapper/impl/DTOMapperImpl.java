@@ -28,18 +28,21 @@ public class DTOMapperImpl implements DTOMapper {
     runDTO.setDistance(run.getDistance());
     runDTO.setStartDateTime(run.getStartDateTime());
     runDTO.setDuration(run.getDuration());
-    runDTO.setCreateDate(run.getCreateDate());
-    runDTO.setCreatedByUserId(run.getCreatedByUserId());
-    runDTO.setUpdateDate(run.getUpdateDate());
-    runDTO.setUpdatedByUserId(run.getUpdatedByUserId());
-    runDTO.setIsDeleted(run.getIsDeleted());
+    runDTO.getCrudEntityInfo().setCreateDate(run.getCrudEntityInfo().getCreateDate());
+    runDTO.getCrudEntityInfo().setCreatedByUserId(run.getCrudEntityInfo().getCreatedBy());
+    runDTO.getCrudEntityInfo().setUpdateDate(run.getCrudEntityInfo().getUpdateDate());
+    runDTO.getCrudEntityInfo().setUpdatedByUserId(run.getCrudEntityInfo().getUpdatedBy());
+    runDTO.getCrudEntityInfo().setIsDeleted(run.getCrudEntityInfo().getIsDeleted());
 
     return runDTO;
   }
 
   @Override
   public Route routeDTOToRoute(RouteDTO routeDTO) {
-    return null;
+    Route route = new Route();
+    route.setRouteId(routeDTO.getRouteId());
+
+    return route;
   }
 
   @Override

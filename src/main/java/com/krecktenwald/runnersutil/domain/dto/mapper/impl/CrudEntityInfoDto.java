@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 @Setter
-public abstract class AbstractCRUDEntityDTO {
+public class CrudEntityInfoDto {
   @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
   private Date createDate;
 

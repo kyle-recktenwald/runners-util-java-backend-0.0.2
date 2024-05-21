@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RouteDTO extends AbstractCRUDEntityDTO {
+public class RouteDTO {
 
   private String routeId;
 
@@ -17,4 +17,6 @@ public class RouteDTO extends AbstractCRUDEntityDTO {
   private Set<String> runIds;
 
   private String userId;
+
+  private CrudEntityInfoDto crudEntityInfo;
 }

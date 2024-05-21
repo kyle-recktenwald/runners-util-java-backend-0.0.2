@@ -1,14 +1,6 @@
 package com.krecktenwald.runnersutil.domain.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class Run extends AbstractCRUDEntity {
+public class Run {
   @Id
   @GenericGenerator(name = "run_id", strategy = "uuid2")
   private String runId;
@@ -40,4 +32,6 @@ public class Run extends AbstractCRUDEntity {
   private Route route;
 
   private String userId;
+
+  @Embedded private CrudEntityInfo crudEntityInfo;
 }

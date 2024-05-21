@@ -60,7 +60,7 @@ public class RouteController {
       throws URISyntaxException {
     Route route = dtoMapper.routeDTOToRoute(routeDTO);
     route.setRouteId(String.format("route_%s", UUID.randomUUID()));
-    route.setCreateDate(new Date());
+    route.getCrudEntityInfo().setCreateDate(new Date());
 
     if (routeDTO.getUserId() != null) {
       route.setUserId(routeDTO.getUserId());
@@ -88,7 +88,7 @@ public class RouteController {
       existingRoute.setUserId(routeDTO.getUserId());
     }
 
-    existingRoute.setUpdateDate(new Date());
+    existingRoute.getCrudEntityInfo().setUpdateDate(new Date());
 
     return ResponseEntity.ok(convertRouteToDTO(routeRepository.save(existingRoute)));
   }
