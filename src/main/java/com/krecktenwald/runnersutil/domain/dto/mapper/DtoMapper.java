@@ -12,7 +12,7 @@ import org.mapstruct.Mapper;
 
 /** * Maps POJO/Entity objects to Data Transfer Objects (DTOs), and vice-versa */
 @Mapper(componentModel = "spring")
-public interface DTOMapper {
+public interface DtoMapper {
   RouteDto routeToRouteDTO(Route route);
 
   RunDto runToRunDTO(Run run);

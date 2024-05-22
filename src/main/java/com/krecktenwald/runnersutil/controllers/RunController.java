@@ -1,6 +1,6 @@
 package com.krecktenwald.runnersutil.controllers;
 
-import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
+import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.CreateRunDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDto;
 import com.krecktenwald.runnersutil.domain.entities.Route;
@@ -36,7 +36,7 @@ public class RunController {
 
   @Autowired private RouteRepository routeRepository;
 
-  @Autowired private DTOMapper dtoMapper;
+  @Autowired private DtoMapper dtoMapper;
 
   public RunController(RunRepository runRepository) {
     this.runRepository = runRepository;

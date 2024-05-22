@@ -1,6 +1,6 @@
 package com.krecktenwald.runnersutil.controllers;
 
-import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
+import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
@@ -26,7 +26,7 @@ public class RouteController {
   private final RouteRepository routeRepository;
   private final JwtService jwtService;
 
-  @Autowired private DTOMapper dtoMapper;
+  @Autowired private DtoMapper dtoMapper;
 
   public RouteController(RouteRepository routeRepository, JwtService jwtService) {
     this.routeRepository = routeRepository;
