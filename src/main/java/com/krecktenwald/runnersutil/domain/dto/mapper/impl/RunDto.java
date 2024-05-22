@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RunDTO {
+public class RunDto {
   private String runId;
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -22,7 +22,7 @@ public class RunDTO {
 
   private String userId;
 
-  private RouteDTO route;
+  private RouteDto route;
 
   private CrudEntityInfoDto crudEntityInfo;
 }

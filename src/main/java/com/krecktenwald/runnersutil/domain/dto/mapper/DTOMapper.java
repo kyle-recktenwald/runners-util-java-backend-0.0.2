@@ -1,8 +1,8 @@
 package com.krecktenwald.runnersutil.domain.dto.mapper;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.CrudEntityInfoDto;
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDTO;
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDTO;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDto;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
@@ -13,31 +13,31 @@ import org.mapstruct.Mapper;
 /** * Maps POJO/Entity objects to Data Transfer Objects (DTOs), and vice-versa */
 @Mapper(componentModel = "spring")
 public interface DTOMapper {
-  RouteDTO routeToRouteDTO(Route route);
+  RouteDto routeToRouteDTO(Route route);
 
-  RunDTO runToRunDTO(Run run);
+  RunDto runToRunDTO(Run run);
 
-  Route routeDTOToRoute(RouteDTO routeDTO);
+  Route routeDTOToRoute(RouteDto routeDTO);
 
   CrudEntityInfoDto map(CrudEntityInfo crudEntityInfo);
 
   CrudEntityInfo map(CrudEntityInfoDto crudEntityInfoDto);
 
-  Run runDTOToRun(RunDTO runDTO);
+  Run runDTOToRun(RunDto runDTO);
 
-  Set<RouteDTO> routesToRouteDTOs(Set<Route> routes);
+  Set<RouteDto> routesToRouteDTOs(Set<Route> routes);
 
-  Set<RunDTO> runsToRunDTOs(Set<Run> runs);
+  Set<RunDto> runsToRunDTOs(Set<Run> runs);
 
-  Set<Route> routeDTOsToRoutes(Set<RouteDTO> routeDTOs);
+  Set<Route> routeDTOsToRoutes(Set<RouteDto> routeDtos);
 
-  Set<Run> runDTOsToRuns(Set<RunDTO> runDTOs);
+  Set<Run> runDTOsToRuns(Set<RunDto> runDtos);
 
-  List<RouteDTO> routesToRouteDTOs(List<Route> routes);
+  List<RouteDto> routesToRouteDTOs(List<Route> routes);
 
-  List<RunDTO> runsToRunDTOs(List<Run> runs);
+  List<RunDto> runsToRunDTOs(List<Run> runs);
 
-  List<Route> routeDTOsToRoutes(List<RouteDTO> routeDTOs);
+  List<Route> routeDTOsToRoutes(List<RouteDto> routeDtos);
 
-  List<Run> runDTOsToRuns(List<RunDTO> runDTOs);
+  List<Run> runDTOsToRuns(List<RunDto> runDtos);
 }

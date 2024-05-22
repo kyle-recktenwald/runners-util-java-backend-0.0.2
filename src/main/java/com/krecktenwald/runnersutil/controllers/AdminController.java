@@ -1,10 +1,11 @@
 package com.krecktenwald.runnersutil.controllers;
 
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDTO;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDto;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +22,9 @@ public class AdminController {
   }
 
   @GetMapping("/test-runs")
-  public Set<RunDTO> getRuns() {
-    Set<RunDTO> runDTOs = new HashSet<>();
-    RunDTO run1 = new RunDTO();
+  public Set<RunDto> getRuns() {
+    Set<RunDto> runDtos = new HashSet<>();
+    RunDto run1 = new RunDto();
     run1.setRunId("1");
     run1.setStartDateTime(new Date());
     run1.setDuration(3300000L);
@@ -31,7 +32,7 @@ public class AdminController {
     run1.setUserId("user_1");
     // run1.setRouteDto("route_1");
 
-    RunDTO run2 = new RunDTO();
+    RunDto run2 = new RunDto();
     run2.setRunId("2");
     run2.setStartDateTime(new Date());
     run2.setDuration(3800000L);
@@ -39,7 +40,7 @@ public class AdminController {
     run2.setUserId("user_2");
     // run2.setRouteDto("route_2");
 
-    RunDTO run3 = new RunDTO();
+    RunDto run3 = new RunDto();
     run3.setRunId("3");
     run3.setStartDateTime(new Date());
     run3.setDuration(3400000L);
@@ -47,8 +48,8 @@ public class AdminController {
     run3.setUserId("user_3");
     // run3.setRouteDto("route_3");
 
-    runDTOs.addAll(Arrays.asList(run1, run2, run3));
+    runDtos.addAll(Arrays.asList(run1, run2, run3));
 
-    return runDTOs;
+    return runDtos;
   }
 }

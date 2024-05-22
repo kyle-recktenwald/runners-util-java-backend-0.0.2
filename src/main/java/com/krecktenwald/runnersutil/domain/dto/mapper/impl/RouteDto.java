@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RouteDTO {
+public class RouteDto {
 
   private String routeId;
 
@@ -14,7 +14,7 @@ public class RouteDTO {
 
   private Double distance;
 
-  private Set<RunDTO> runs;
+  private Set<RunDto> runs;
 
   private String userId;
 

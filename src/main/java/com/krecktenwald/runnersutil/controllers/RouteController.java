@@ -1,7 +1,7 @@
 package com.krecktenwald.runnersutil.controllers;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDTO;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
@@ -34,19 +34,19 @@ public class RouteController {
   }
 
   @GetMapping
-  public Set<RouteDTO> getRoutes() {
-    Set<RouteDTO> routeDTOs = new HashSet<>();
+  public Set<RouteDto> getRoutes() {
+    Set<RouteDto> routeDtos = new HashSet<>();
     for (Route route : routeRepository.findAll()) {
-      routeDTOs.add(convertRouteToDTO(route));
+      routeDtos.add(convertRouteToDTO(route));
     }
 
-    return routeDTOs;
+    return routeDtos;
   }
 
   @PostMapping("/by-user")
   @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
-  public Set<RouteDTO> getRoutesByUserId(@RequestParam String userId) {
-    Set<RouteDTO> routeDtos = new HashSet<>();
+  public Set<RouteDto> getRoutesByUserId(@RequestParam String userId) {
+    Set<RouteDto> routeDtos = new HashSet<>();
     for (Route route : routeRepository.findAllByUserId(userId)) {
       routeDtos.add(convertRouteToDTO(route));
     }
@@ -55,12 +55,12 @@ public class RouteController {
   }
 
   @GetMapping("/{id}")
-  public RouteDTO getRoute(@PathVariable String id) {
+  public RouteDto getRoute(@PathVariable String id) {
     return convertRouteToDTO(routeRepository.findById(id).orElseThrow(RuntimeException::new));
   }
 
   @PostMapping
-  public ResponseEntity<RouteDTO> createRoute(@RequestBody @Valid RouteDTO routeDTO)
+  public ResponseEntity<RouteDto> createRoute(@RequestBody @Valid RouteDto routeDTO)
       throws URISyntaxException {
     Route route = dtoMapper.routeDTOToRoute(routeDTO);
     route.setRouteId(String.format("route_%s", UUID.randomUUID()));
@@ -76,15 +76,15 @@ public class RouteController {
     }
 
     Route savedRoute = routeRepository.save(route);
-    RouteDTO savedRouteDTO = convertRouteToDTO(savedRoute);
+    RouteDto savedRouteDto = convertRouteToDTO(savedRoute);
 
-    return ResponseEntity.created(new URI("/routes/" + savedRouteDTO.getRouteId()))
-        .body(savedRouteDTO);
+    return ResponseEntity.created(new URI("/routes/" + savedRouteDto.getRouteId()))
+        .body(savedRouteDto);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<RouteDTO> updateRoute(
-      @PathVariable String id, @RequestBody RouteDTO routeDTO) {
+  public ResponseEntity<RouteDto> updateRoute(
+      @PathVariable String id, @RequestBody RouteDto routeDTO) {
     Route existingRoute = routeRepository.findById(id).orElseThrow(RuntimeException::new);
 
     if (routeDTO.getName() != null) {
@@ -103,12 +103,12 @@ public class RouteController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<RouteDTO> deleteRoute(@PathVariable String id) {
+  public ResponseEntity<RouteDto> deleteRoute(@PathVariable String id) {
     routeRepository.deleteById(id);
     return ResponseEntity.ok().build();
   }
 
-  private RouteDTO convertRouteToDTO(Route route) {
+  private RouteDto convertRouteToDTO(Route route) {
     return dtoMapper.routeToRouteDTO(route);
   }
 }
