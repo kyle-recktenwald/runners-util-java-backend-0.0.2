@@ -64,7 +64,6 @@ public class RunController {
       throws URISyntaxException {
     Run run = new Run();
     run.setRunId(String.format("run_%s", UUID.randomUUID()));
-    run.getCrudEntityInfo().setCreateDate(new Date());
     run.getCrudEntityInfo().setIsDeleted(false);
 
     if (createRunDto.getUserId() != null) {

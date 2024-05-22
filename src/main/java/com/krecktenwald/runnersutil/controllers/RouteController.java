@@ -5,6 +5,7 @@ import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDTO;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
+import com.krecktenwald.runnersutil.security.JwtService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,11 +24,13 @@ import org.springframework.web.bind.annotation.*;
 public class RouteController {
 
   private final RouteRepository routeRepository;
+  private final JwtService jwtService;
 
   @Autowired private DTOMapper dtoMapper;
 
-  public RouteController(RouteRepository routeRepository) {
+  public RouteController(RouteRepository routeRepository, JwtService jwtService) {
     this.routeRepository = routeRepository;
+    this.jwtService = jwtService;
   }
 
   @GetMapping
@@ -61,11 +64,15 @@ public class RouteController {
       throws URISyntaxException {
     Route route = dtoMapper.routeDTOToRoute(routeDTO);
     route.setRouteId(String.format("route_%s", UUID.randomUUID()));
-    //TODO: Set Created By User
-    //CrudEntityInfo crudEntityInfo = new CrudEntityInfo("");
+
+    String creatorUserId = jwtService.getUserIdFromJwt();
+    CrudEntityInfo crudEntityInfo = new CrudEntityInfo(creatorUserId);
+    route.setCrudEntityInfo(crudEntityInfo);
 
     if (routeDTO.getUserId() != null) {
       route.setUserId(routeDTO.getUserId());
+    } else {
+      route.setUserId(creatorUserId);
     }
 
     Route savedRoute = routeRepository.save(route);

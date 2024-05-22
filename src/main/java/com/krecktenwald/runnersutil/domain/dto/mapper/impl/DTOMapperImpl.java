@@ -46,16 +46,16 @@ public class DTOMapperImpl implements DTOMapper {
     route.setDistance(routeDTO.getDistance());
     route.setUserId(routeDTO.getUserId());
 
-    if (routeDTO.getCrudEntityInfo() != null) {
-      CrudEntityInfoDto crudEntityInfoDto = routeDTO.getCrudEntityInfo();
-      CrudEntityInfo crudEntityInfo = new CrudEntityInfo();
-      crudEntityInfo.setCreateDate(crudEntityInfoDto.getCreateDate());
-      crudEntityInfo.setUpdateDate(crudEntityInfoDto.getUpdateDate());
-      crudEntityInfo.setCreatedBy(crudEntityInfoDto.getCreatedBy());
-      crudEntityInfo.setUpdatedBy(crudEntityInfoDto.getUpdatedBy());
-      crudEntityInfo.setIsDeleted(crudEntityInfoDto.getIsDeleted());
-      route.setCrudEntityInfo(crudEntityInfo);
-    }
+//    if (routeDTO.getCrudEntityInfo() != null) {
+//      CrudEntityInfoDto crudEntityInfoDto = routeDTO.getCrudEntityInfo();
+//      CrudEntityInfo crudEntityInfo = new CrudEntityInfo();
+//      crudEntityInfo.setCreateDate(crudEntityInfoDto.getCreateDate());
+//      crudEntityInfo.setUpdateDate(crudEntityInfoDto.getUpdateDate());
+//      crudEntityInfo.setCreatedBy(crudEntityInfoDto.getCreatedBy());
+//      crudEntityInfo.setUpdatedBy(crudEntityInfoDto.getUpdatedBy());
+//      crudEntityInfo.setIsDeleted(crudEntityInfoDto.getIsDeleted());
+//      route.setCrudEntityInfo(crudEntityInfo);
+//    }
 
     return route;
   }

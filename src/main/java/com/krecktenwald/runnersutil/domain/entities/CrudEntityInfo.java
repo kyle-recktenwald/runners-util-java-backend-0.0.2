@@ -7,22 +7,24 @@ import jakarta.persistence.TemporalType;
 import java.util.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Embeddable
 @Getter
 @Setter
+@NoArgsConstructor
 public class CrudEntityInfo {
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "create_date", nullable = false)
-  private final Date createDate;
+  private Date createDate = new Date();
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "update_date")
   private Date updateDate;
 
   @Column(name = "created_by", nullable = false)
-  private final String createdBy;
+  private String createdBy;
 
   @Column(name = "updated_by")
   private String updatedBy;
@@ -34,10 +36,7 @@ public class CrudEntityInfo {
     if (createdBy == null || createdBy.trim().isEmpty()) {
       throw new IllegalArgumentException("createdBy cannot be null or empty");
     }
-    this.createDate = new Date();
     this.createdBy = createdBy;
-    this.updateDate = null;
-    this.updatedBy = null;
     this.isDeleted = false;
   }
 }
