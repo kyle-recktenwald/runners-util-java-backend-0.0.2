@@ -22,7 +22,7 @@ public class RunDTO {
 
   private String userId;
 
-  private String routeId;
+  private RouteDTO route;
 
   private CrudEntityInfoDto crudEntityInfo;
 }

@@ -2,7 +2,6 @@ package com.krecktenwald.runnersutil.domain.dto.mapper.impl;
 
 import java.util.Date;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 

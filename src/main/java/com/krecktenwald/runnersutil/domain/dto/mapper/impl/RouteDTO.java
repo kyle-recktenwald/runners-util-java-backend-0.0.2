@@ -14,7 +14,7 @@ public class RouteDTO {
 
   private Double distance;
 
-  private Set<String> runIds;
+  private Set<RunDTO> runs;
 
   private String userId;
 

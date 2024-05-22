@@ -29,7 +29,7 @@ public class AdminController {
     run1.setDuration(3300000L);
     run1.setDistance(5.0);
     run1.setUserId("user_1");
-    run1.setRouteId("route_1");
+    // run1.setRouteDto("route_1");
 
     RunDTO run2 = new RunDTO();
     run2.setRunId("2");
@@ -37,7 +37,7 @@ public class AdminController {
     run2.setDuration(3800000L);
     run2.setDistance(7.0);
     run2.setUserId("user_2");
-    run2.setRouteId("route_2");
+    // run2.setRouteDto("route_2");
 
     RunDTO run3 = new RunDTO();
     run3.setRunId("3");
@@ -45,7 +45,7 @@ public class AdminController {
     run3.setDuration(3400000L);
     run3.setDistance(10.0);
     run3.setUserId("user_3");
-    run3.setRouteId("route_3");
+    // run3.setRouteDto("route_3");
 
     runDTOs.addAll(Arrays.asList(run1, run2, run3));
 

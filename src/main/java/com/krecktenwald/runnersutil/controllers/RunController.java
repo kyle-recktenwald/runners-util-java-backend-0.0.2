@@ -95,7 +95,7 @@ public class RunController {
     Run createdRun = runRepository.save(run);
     RunDTO createdRunDTO = dtoMapper.runToRunDTO(createdRun);
 
-    createdRunDTO.setRouteId(createdRun.getRoute().getRouteId());
+    // createdRunDTO.setRouteDto(createdRun.getRoute().getRouteId());
 
     return ResponseEntity.created(new URI("/runs/" + createdRunDTO.getRunId())).body(createdRunDTO);
   }
@@ -120,16 +120,16 @@ public class RunController {
       currentRun.setUserId(runDTO.getUserId());
     }
 
-    if (runDTO.getRouteId() != null) {
+    /*if (runDTO.getRouteDto() != null) {
       Route route = routeRepository.findById(runDTO.getRunId()).orElseThrow(RuntimeException::new);
       currentRun.setRoute(route);
-    }
+    }*/
 
     currentRun.getCrudEntityInfo().setUpdateDate(new Date());
     Run updatedRun = runRepository.save(currentRun);
 
     RunDTO updatedRunDTO = dtoMapper.runToRunDTO(updatedRun);
-    updatedRunDTO.setRouteId(updatedRun.getRoute().getRouteId());
+    // updatedRunDTO.setRouteDto(updatedRun.getRoute().getRouteId());
 
     return ResponseEntity.ok(updatedRunDTO);
   }
@@ -143,9 +143,9 @@ public class RunController {
   private RunDTO convertRunToDTO(Run run) {
     RunDTO runDTO = dtoMapper.runToRunDTO(run);
 
-    if (run.getRoute() != null && run.getRoute().getRouteId() != null) {
-      runDTO.setRouteId(run.getRoute().getRouteId());
-    }
+    /*if (run.getRoute() != null && run.getRoute().getRouteId() != null) {
+      runDTO.setRouteDto(run.getRoute().getRouteId());
+    }*/
 
     return runDTO;
   }
