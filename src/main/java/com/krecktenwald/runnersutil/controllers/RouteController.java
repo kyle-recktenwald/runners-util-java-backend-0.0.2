@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +24,13 @@ public class RouteController {
 
   private final RouteRepository routeRepository;
   private final JwtService jwtService;
+  private final DtoMapper dtoMapper;
 
-  @Autowired private DtoMapper dtoMapper;
-
-  public RouteController(RouteRepository routeRepository, JwtService jwtService) {
+  public RouteController(
+      RouteRepository routeRepository, JwtService jwtService, DtoMapper dtoMapper) {
     this.routeRepository = routeRepository;
     this.jwtService = jwtService;
+    this.dtoMapper = dtoMapper;
   }
 
   @GetMapping
