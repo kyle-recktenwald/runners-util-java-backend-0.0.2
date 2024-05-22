@@ -2,6 +2,7 @@ package com.krecktenwald.runnersutil.controllers;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDTO;
+import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
 import jakarta.validation.Valid;
@@ -60,7 +61,8 @@ public class RouteController {
       throws URISyntaxException {
     Route route = dtoMapper.routeDTOToRoute(routeDTO);
     route.setRouteId(String.format("route_%s", UUID.randomUUID()));
-    route.getCrudEntityInfo().setCreateDate(new Date());
+    //TODO: Set Created By User
+    //CrudEntityInfo crudEntityInfo = new CrudEntityInfo("");
 
     if (routeDTO.getUserId() != null) {
       route.setUserId(routeDTO.getUserId());

@@ -1,6 +1,7 @@
 package com.krecktenwald.runnersutil.domain.dto.mapper.impl;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DTOMapper;
+import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
 import java.util.List;
@@ -29,9 +30,9 @@ public class DTOMapperImpl implements DTOMapper {
     runDTO.setStartDateTime(run.getStartDateTime());
     runDTO.setDuration(run.getDuration());
     runDTO.getCrudEntityInfo().setCreateDate(run.getCrudEntityInfo().getCreateDate());
-    runDTO.getCrudEntityInfo().setCreatedByUserId(run.getCrudEntityInfo().getCreatedBy());
+    runDTO.getCrudEntityInfo().setCreatedBy(run.getCrudEntityInfo().getCreatedBy());
     runDTO.getCrudEntityInfo().setUpdateDate(run.getCrudEntityInfo().getUpdateDate());
-    runDTO.getCrudEntityInfo().setUpdatedByUserId(run.getCrudEntityInfo().getUpdatedBy());
+    runDTO.getCrudEntityInfo().setUpdatedBy(run.getCrudEntityInfo().getUpdatedBy());
     runDTO.getCrudEntityInfo().setIsDeleted(run.getCrudEntityInfo().getIsDeleted());
 
     return runDTO;
@@ -41,6 +42,20 @@ public class DTOMapperImpl implements DTOMapper {
   public Route routeDTOToRoute(RouteDTO routeDTO) {
     Route route = new Route();
     route.setRouteId(routeDTO.getRouteId());
+    route.setName(routeDTO.getName());
+    route.setDistance(routeDTO.getDistance());
+    route.setUserId(routeDTO.getUserId());
+
+    if (routeDTO.getCrudEntityInfo() != null) {
+      CrudEntityInfoDto crudEntityInfoDto = routeDTO.getCrudEntityInfo();
+      CrudEntityInfo crudEntityInfo = new CrudEntityInfo();
+      crudEntityInfo.setCreateDate(crudEntityInfoDto.getCreateDate());
+      crudEntityInfo.setUpdateDate(crudEntityInfoDto.getUpdateDate());
+      crudEntityInfo.setCreatedBy(crudEntityInfoDto.getCreatedBy());
+      crudEntityInfo.setUpdatedBy(crudEntityInfoDto.getUpdatedBy());
+      crudEntityInfo.setIsDeleted(crudEntityInfoDto.getIsDeleted());
+      route.setCrudEntityInfo(crudEntityInfo);
+    }
 
     return route;
   }
