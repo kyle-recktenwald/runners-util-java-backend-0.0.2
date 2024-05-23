@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/routes")
 public class RouteController {
-
   private final RouteRepository routeRepository;
   private final JwtService jwtService;
   private final DtoMapper dtoMapper;
@@ -98,6 +97,10 @@ public class RouteController {
     }
 
     existingRoute.getCrudEntityInfo().setUpdateDate(new Date());
+    String creatorUserId = jwtService.getUserIdFromJwt();
+    if(creatorUserId != null){
+      existingRoute.getCrudEntityInfo().setUpdatedBy(creatorUserId);
+    }
 
     return ResponseEntity.ok(convertRouteToDTO(routeRepository.save(existingRoute)));
   }
