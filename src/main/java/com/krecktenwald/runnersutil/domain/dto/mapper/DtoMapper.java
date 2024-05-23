@@ -9,21 +9,26 @@ import com.krecktenwald.runnersutil.domain.entities.Run;
 import java.util.List;
 import java.util.Set;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /** * Maps POJO/Entity objects to Data Transfer Objects (DTOs), and vice-versa */
 @Mapper(componentModel = "spring")
 public interface DtoMapper {
+  @Mapping(target = "runs", ignore = true)
   RouteDto routeToRouteDTO(Route route);
 
+  @Mapping(target = "route", ignore = true)
   RunDto runToRunDTO(Run run);
 
+  @Mapping(target = "runs", ignore = true)
   Route routeDTOToRoute(RouteDto routeDTO);
+
+  @Mapping(target = "route", ignore = true)
+  Run runDTOToRun(RunDto runDTO);
 
   CrudEntityInfoDto map(CrudEntityInfo crudEntityInfo);
 
   CrudEntityInfo map(CrudEntityInfoDto crudEntityInfoDto);
-
-  Run runDTOToRun(RunDto runDTO);
 
   Set<RouteDto> routesToRouteDTOs(Set<Route> routes);
 

@@ -1,20 +1,19 @@
 package com.krecktenwald.runnersutil.controllers;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.CreateRunDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDto;
+import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
 import com.krecktenwald.runnersutil.repositories.RunRepository;
-import jakarta.validation.Valid;
+import com.krecktenwald.runnersutil.security.JwtService;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,13 +32,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class RunController {
 
   private final RunRepository runRepository;
+  private final RouteRepository routeRepository;
+  private final DtoMapper dtoMapper;
+  private final JwtService jwtService;
 
-  @Autowired private RouteRepository routeRepository;
-
-  @Autowired private DtoMapper dtoMapper;
-
-  public RunController(RunRepository runRepository) {
+  public RunController(
+      RunRepository runRepository,
+      RouteRepository routeRepository,
+      DtoMapper dtoMapper,
+      JwtService jwtService) {
     this.runRepository = runRepository;
+    this.routeRepository = routeRepository;
+    this.dtoMapper = dtoMapper;
+    this.jwtService = jwtService;
   }
 
   @GetMapping
@@ -60,42 +65,40 @@ public class RunController {
 
   @PostMapping
   @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
-  public ResponseEntity<RunDto> createRun(@RequestBody @Valid CreateRunDto createRunDto)
-      throws URISyntaxException {
+  public ResponseEntity<RunDto> createRun(@RequestBody RunDto runDto) throws URISyntaxException {
     Run run = new Run();
     run.setRunId(String.format("run_%s", UUID.randomUUID()));
-    run.getCrudEntityInfo().setIsDeleted(false);
 
-    if (createRunDto.getUserId() != null) {
-      run.setUserId(createRunDto.getUserId());
+    if (runDto.getUserId() != null) {
+      run.setUserId(runDto.getUserId());
     }
 
-    if (createRunDto.getCreatedByUserId() != null) {
-      run.getCrudEntityInfo().setCreatedBy(createRunDto.getCreatedByUserId());
-    }
+    String creatorUserId = jwtService.getUserIdFromJwt();
+    CrudEntityInfo crudEntityInfo = new CrudEntityInfo(creatorUserId);
+    run.setCrudEntityInfo(crudEntityInfo);
 
-    if (createRunDto.getRouteId() != null) {
+    if (runDto.getRoute().getRouteId() != null) {
       Route route =
-          routeRepository.findById(createRunDto.getRouteId()).orElseThrow(RuntimeException::new);
+          routeRepository
+              .findById(runDto.getRoute().getRouteId())
+              .orElseThrow(RuntimeException::new);
       run.setRoute(route);
     }
 
-    if (createRunDto.getDuration() != null) {
-      run.setDuration(createRunDto.getDuration());
+    if (runDto.getDuration() != null) {
+      run.setDuration(runDto.getDuration());
     }
 
-    if (createRunDto.getDistance() != null) {
-      run.setDistance(createRunDto.getDistance());
+    if (runDto.getDistance() != null) {
+      run.setDistance(runDto.getDistance());
     }
 
-    if (createRunDto.getStartDateTime() != null) {
-      run.setStartDateTime(createRunDto.getStartDateTime());
+    if (runDto.getStartDateTime() != null) {
+      run.setStartDateTime(runDto.getStartDateTime());
     }
 
     Run createdRun = runRepository.save(run);
     RunDto createdRunDto = dtoMapper.runToRunDTO(createdRun);
-
-    // createdRunDTO.setRouteDto(createdRun.getRoute().getRouteId());
 
     return ResponseEntity.created(new URI("/runs/" + createdRunDto.getRunId())).body(createdRunDto);
   }

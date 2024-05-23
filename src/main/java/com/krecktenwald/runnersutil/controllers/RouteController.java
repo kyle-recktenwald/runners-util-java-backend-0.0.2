@@ -98,7 +98,7 @@ public class RouteController {
 
     existingRoute.getCrudEntityInfo().setUpdateDate(new Date());
     String creatorUserId = jwtService.getUserIdFromJwt();
-    if(creatorUserId != null){
+    if (creatorUserId != null) {
       existingRoute.getCrudEntityInfo().setUpdatedBy(creatorUserId);
     }
 
