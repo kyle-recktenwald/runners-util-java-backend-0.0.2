@@ -1,5 +1,7 @@
-package com.krecktenwald.runnersutil.domain.dto.mapper.impl;
+package com.krecktenwald.runnersutil.domain.dto.mapper.impl.run;
 
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.CrudEntityInfoDto;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.route.RouteDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;

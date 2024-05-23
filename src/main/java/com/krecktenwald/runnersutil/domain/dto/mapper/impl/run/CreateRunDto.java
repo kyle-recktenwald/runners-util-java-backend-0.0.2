@@ -1,4 +1,4 @@
-package com.krecktenwald.runnersutil.domain.dto.mapper.impl;
+package com.krecktenwald.runnersutil.domain.dto.mapper.impl.run;
 
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;

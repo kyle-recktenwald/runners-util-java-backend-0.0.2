@@ -1,8 +1,8 @@
 package com.krecktenwald.runnersutil.domain.dto.mapper;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.CrudEntityInfoDto;
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDto;
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDto;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.route.RouteDto;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;

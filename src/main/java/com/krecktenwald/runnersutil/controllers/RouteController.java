@@ -1,7 +1,7 @@
 package com.krecktenwald.runnersutil.controllers;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RouteDto;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.route.RouteDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;

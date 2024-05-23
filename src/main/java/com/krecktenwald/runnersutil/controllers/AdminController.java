@@ -1,6 +1,6 @@
 package com.krecktenwald.runnersutil.controllers;
 
-import com.krecktenwald.runnersutil.domain.dto.mapper.impl.RunDto;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
