@@ -1,6 +1,7 @@
 package com.krecktenwald.runnersutil.controllers;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.CreateRunDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
@@ -14,6 +15,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/runs")
 public class RunController {
+  private static final Logger logger = LogManager.getLogger(RunController.class);
 
   private final RunRepository runRepository;
   private final RouteRepository routeRepository;
@@ -65,36 +70,40 @@ public class RunController {
 
   @PostMapping
   @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
-  public ResponseEntity<RunDto> createRun(@RequestBody RunDto runDto) throws URISyntaxException {
+  public ResponseEntity<RunDto> createRun(@RequestBody CreateRunDto createRunDto) throws URISyntaxException {
     Run run = new Run();
     run.setRunId(String.format("run_%s", UUID.randomUUID()));
 
-    if (runDto.getUserId() != null) {
-      run.setUserId(runDto.getUserId());
+    if (createRunDto.getUserId() != null) {
+      run.setUserId(createRunDto.getUserId());
     }
 
     String creatorUserId = jwtService.getUserIdFromJwt();
     CrudEntityInfo crudEntityInfo = new CrudEntityInfo(creatorUserId);
     run.setCrudEntityInfo(crudEntityInfo);
 
-    if (runDto.getRoute().getRouteId() != null) {
+    if (createRunDto.getRouteId() != null) {
       Route route =
           routeRepository
-              .findById(runDto.getRoute().getRouteId())
+              .findById(createRunDto.getRouteId())
               .orElseThrow(RuntimeException::new);
-      run.setRoute(route);
+      if(route != null){
+        run.setRoute(route);
+      } else{
+        logger.error("Route does not exist.");
+      }
     }
 
-    if (runDto.getDuration() != null) {
-      run.setDuration(runDto.getDuration());
+    if (createRunDto.getDuration() != null) {
+      run.setDuration(createRunDto.getDuration());
     }
 
-    if (runDto.getDistance() != null) {
-      run.setDistance(runDto.getDistance());
+    if (createRunDto.getDistance() != null) {
+      run.setDistance(createRunDto.getDistance());
     }
 
-    if (runDto.getStartDateTime() != null) {
-      run.setStartDateTime(runDto.getStartDateTime());
+    if (createRunDto.getStartDateTime() != null) {
+      run.setStartDateTime(createRunDto.getStartDateTime());
     }
 
     Run createdRun = runRepository.save(run);

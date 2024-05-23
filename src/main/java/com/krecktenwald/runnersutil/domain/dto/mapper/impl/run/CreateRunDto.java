@@ -12,8 +12,6 @@ import lombok.Setter;
 public class CreateRunDto {
   @NotNull private String userId;
 
-  @NotNull private String createdByUserId;
-
   private String routeId;
 
   @NotNull private Double distance;
