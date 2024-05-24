@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RouteDto {
-
   private String routeId;
 
   private String name;

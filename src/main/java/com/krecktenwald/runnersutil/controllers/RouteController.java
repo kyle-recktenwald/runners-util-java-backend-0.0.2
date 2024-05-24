@@ -1,6 +1,7 @@
 package com.krecktenwald.runnersutil.controllers;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.route.CreateRouteDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.route.RouteDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
@@ -68,17 +69,17 @@ public class RouteController {
   }
 
   @PostMapping
-  public ResponseEntity<RouteDto> createRoute(@RequestBody @Valid RouteDto routeDTO)
+  public ResponseEntity<RouteDto> createRoute(@RequestBody @Valid CreateRouteDto createRouteDto)
       throws URISyntaxException {
-    Route route = dtoMapper.routeDTOToRoute(routeDTO);
+    Route route = dtoMapper.map(createRouteDto);
     route.setRouteId(String.format("route_%s", UUID.randomUUID()));
 
     String creatorUserId = jwtService.getUserIdFromJwt();
     CrudEntityInfo crudEntityInfo = new CrudEntityInfo(creatorUserId);
     route.setCrudEntityInfo(crudEntityInfo);
 
-    if (routeDTO.getUserId() != null) {
-      route.setUserId(routeDTO.getUserId());
+    if (createRouteDto.getUserId() != null) {
+      route.setUserId(createRouteDto.getUserId());
     } else {
       route.setUserId(creatorUserId);
     }
@@ -92,17 +93,17 @@ public class RouteController {
 
   @PutMapping("/{id}")
   public ResponseEntity<RouteDto> updateRoute(
-      @PathVariable String id, @RequestBody RouteDto routeDTO) {
+      @PathVariable String id, @RequestBody @Valid CreateRouteDto createRouteDto) {
     Route existingRoute = routeRepository.findById(id).orElseThrow(RuntimeException::new);
 
-    if (routeDTO.getName() != null) {
-      existingRoute.setName(routeDTO.getName());
+    if (createRouteDto.getName() != null) {
+      existingRoute.setName(createRouteDto.getName());
     }
-    if (routeDTO.getDistance() != null) {
-      existingRoute.setDistance(routeDTO.getDistance());
+    if (createRouteDto.getDistance() != null) {
+      existingRoute.setDistance(createRouteDto.getDistance());
     }
-    if (routeDTO.getUserId() != null) {
-      existingRoute.setUserId(routeDTO.getUserId());
+    if (createRouteDto.getUserId() != null) {
+      existingRoute.setUserId(createRouteDto.getUserId());
     }
 
     existingRoute.getCrudEntityInfo().setUpdateDate(new Date());

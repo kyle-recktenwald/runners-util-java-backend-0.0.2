@@ -1,6 +1,7 @@
 package com.krecktenwald.runnersutil.domain.dto.mapper;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.CrudEntityInfoDto;
+import com.krecktenwald.runnersutil.domain.dto.mapper.impl.route.CreateRouteDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.route.RouteDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
@@ -16,11 +17,16 @@ import org.mapstruct.Mapping;
 public interface DtoMapper {
   RouteDto routeToRouteDTO(Route route);
 
-  @Mapping(target = "route", ignore = true)
-  RunDto runToRunDTO(Run run);
-
   @Mapping(target = "runs", ignore = true)
   Route routeDTOToRoute(RouteDto routeDTO);
+
+  @Mapping(target = "routeId", ignore = true)
+  @Mapping(target = "runs", ignore = true)
+  @Mapping(target = "crudEntityInfo", ignore = true)
+  Route map(CreateRouteDto createRouteDto);
+
+  @Mapping(target = "route", ignore = true)
+  RunDto runToRunDTO(Run run);
 
   @Mapping(target = "route", ignore = true)
   Run runDTOToRun(RunDto runDTO);
