@@ -14,7 +14,6 @@ import org.mapstruct.Mapping;
 /** * Maps POJO/Entity objects to Data Transfer Objects (DTOs), and vice-versa */
 @Mapper(componentModel = "spring")
 public interface DtoMapper {
-  @Mapping(target = "runs", ignore = true)
   RouteDto routeToRouteDTO(Route route);
 
   @Mapping(target = "route", ignore = true)
