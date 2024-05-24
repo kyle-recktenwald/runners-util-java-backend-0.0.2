@@ -96,20 +96,18 @@ public class RouteController {
       @PathVariable String id, @RequestBody @Valid CreateRouteDto createRouteDto) {
     Route existingRoute = routeRepository.findById(id).orElseThrow(RuntimeException::new);
 
-    if (createRouteDto.getName() != null) {
-      existingRoute.setName(createRouteDto.getName());
-    }
-    if (createRouteDto.getDistance() != null) {
-      existingRoute.setDistance(createRouteDto.getDistance());
-    }
-    if (createRouteDto.getUserId() != null) {
-      existingRoute.setUserId(createRouteDto.getUserId());
-    }
+    existingRoute.setName(createRouteDto.getName());
+    existingRoute.setDistance(createRouteDto.getDistance());
+    existingRoute.setUserId(createRouteDto.getUserId());
 
     existingRoute.getCrudEntityInfo().setUpdateDate(new Date());
+
     String creatorUserId = jwtService.getUserIdFromJwt();
     if (creatorUserId != null) {
       existingRoute.getCrudEntityInfo().setUpdatedBy(creatorUserId);
+    } else {
+      logger.error("No user found.");
+      // TODO: Throw UserNotFoundException
     }
 
     return ResponseEntity.ok(dtoMapper.routeToRouteDTO(routeRepository.save(existingRoute)));
@@ -117,6 +115,7 @@ public class RouteController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<RouteDto> deleteRoute(@PathVariable String id) {
+    // TODO: Throw EntityNotFound Exception
     routeRepository.deleteById(id);
     return ResponseEntity.ok().build();
   }

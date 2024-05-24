@@ -82,7 +82,7 @@ public class RunController {
   @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
   public ResponseEntity<RunDto> createRun(@RequestBody @Valid CreateRunDto createRunDto)
       throws URISyntaxException {
-    Run run = new Run();
+    Run run = dtoMapper.map(createRunDto);
     run.setRunId(String.format("run_%s", UUID.randomUUID()));
 
     if (createRunDto.getUserId() != null) {
@@ -98,20 +98,8 @@ public class RunController {
       if (route != null) {
         run.setRoute(route);
       } else {
-        logger.error("Route does not exist.");
+        logger.warn("Route does not exist. Run's route will be set to null.");
       }
-    }
-
-    if (createRunDto.getDuration() != null) {
-      run.setDuration(createRunDto.getDuration());
-    }
-
-    if (createRunDto.getDistance() != null) {
-      run.setDistance(createRunDto.getDistance());
-    }
-
-    if (createRunDto.getStartDateTime() != null) {
-      run.setStartDateTime(createRunDto.getStartDateTime());
     }
 
     Run createdRun = runRepository.save(run);
@@ -123,36 +111,36 @@ public class RunController {
 
   @PutMapping("/{id}")
   public ResponseEntity<RunDto> updateRun(
-      @PathVariable String id, @RequestBody CreateRunDto createRunDto) {
-    Run currentRun = runRepository.findById(id).orElseThrow(RuntimeException::new);
+      @PathVariable String id, @RequestBody @Valid CreateRunDto createRunDto) {
+    Run existingRun = runRepository.findById(id).orElseThrow(RuntimeException::new);
 
-    if (createRunDto.getDistance() != null) {
-      currentRun.setDistance(createRunDto.getDistance());
-    }
-
-    if (createRunDto.getStartDateTime() != null) {
-      currentRun.setStartDateTime(createRunDto.getStartDateTime());
-    }
-
-    if (createRunDto.getDuration() != null) {
-      currentRun.setDuration(createRunDto.getDuration());
-    }
-
-    if (createRunDto.getUserId() != null) {
-      currentRun.setUserId(createRunDto.getUserId());
-    }
+    existingRun.setDistance(createRunDto.getDistance());
+    existingRun.setStartDateTime(createRunDto.getStartDateTime());
+    existingRun.setDuration(createRunDto.getDuration());
+    existingRun.setUserId(createRunDto.getUserId());
 
     if (createRunDto.getRouteId() != null) {
       Route route = routeRepository.findById(createRunDto.getRouteId()).orElse(null);
       if (route != null) {
-        currentRun.setRoute(route);
+        existingRun.setRoute(route);
       } else {
-        logger.error("Route does not exist.");
+        logger.warn(
+            String.format(
+                "Route with ID %s does not exist. Run's existing route will not be changed.",
+                createRunDto.getRouteId()));
       }
     }
 
-    currentRun.getCrudEntityInfo().setUpdateDate(new Date());
-    Run updatedRun = runRepository.save(currentRun);
+    existingRun.getCrudEntityInfo().setUpdateDate(new Date());
+    String updaterUserId = jwtService.getUserIdFromJwt();
+    if (updaterUserId != null) {
+      existingRun.getCrudEntityInfo().setUpdatedBy(updaterUserId);
+    } else {
+      logger.error("No user found.");
+      // TODO: Throw UserNotFoundException
+    }
+
+    Run updatedRun = runRepository.save(existingRun);
 
     RunDto updatedRunDto = dtoMapper.runToRunDTO(updatedRun);
     updatedRunDto.setRoute(dtoMapper.routeToRouteDTO(updatedRun.getRoute()));
@@ -162,6 +150,7 @@ public class RunController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<RunDto> deleteRun(@PathVariable String id) {
+    // TODO: Throw EntityNotFound Exception
     runRepository.deleteById(id);
     return ResponseEntity.ok().build();
   }
