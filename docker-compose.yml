@@ -12,6 +12,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - runners_util_network
     restart: always
@@ -82,3 +83,6 @@ networks:
   runners_util_network:
     name: runners_util_network
     driver: bridge
+
+volumes:
+  postgres-data:
