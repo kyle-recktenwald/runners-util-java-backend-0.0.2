@@ -50,5 +50,5 @@ jobs:
         with:
           args: |
             -Dsonar.projectKey=kyle-recktenwald_runners-util-java-backend-0.0.2
-            -Dsonar.organization=kyle-recktennwald
+            -Dsonar.organization=kyle-recktenwald
             -Dsonar.host.url=https://sonarcloud.io
