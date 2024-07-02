@@ -1,14 +1,13 @@
 package com.krecktenwald.runnersutil.controllers;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 public class RunControllerTest {
 
-    @Test
-    void testGetRuns() {
-        assertTrue(true);
-    }
-
+  @Test
+  void testGetRuns() {
+    assertTrue(true);
+  }
 }
