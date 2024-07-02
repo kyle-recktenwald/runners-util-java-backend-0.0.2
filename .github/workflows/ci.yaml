@@ -46,4 +46,4 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v2.3.0
         with:
-          token: ${{ secrets.SONARQUBE_TOKEN }}
+          token: ${{ secrets.SONAR_TOKEN }}
