@@ -47,8 +47,4 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@v2.3.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: |
-            -Dsonar.projectKey=kyle-recktenwald_runners-util-java-backend-0.0.2
-            -Dsonar.organization=kyle-recktenwald
-            -Dsonar.host.url=https://sonarcloud.io
+
