@@ -1,4 +1,4 @@
-package com.krecktenwald.runnersutil;
+/*package com.krecktenwald.runnersutil;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -10,4 +10,4 @@ class RunnersUtilApplicationTests {
   @Disabled("Disabled until embedded database is set up.")
   @Test
   void contextLoads() {}
-}
+}*/
