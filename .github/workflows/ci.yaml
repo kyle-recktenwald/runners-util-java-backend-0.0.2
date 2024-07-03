@@ -44,12 +44,6 @@ jobs:
         run: ./gradlew test jacocoTestReport
 
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v2.3.0
-        with:
-          args: |
-            -Dsonar.projectKey=kyle-recktenwald_runners-util-java-backend-0.0.2
-            -Dsonar.organization=kyle-recktenwald
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.java.binaries=build/classes/java/main,build/classes/java/test
+        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.SONAR_TOKEN }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

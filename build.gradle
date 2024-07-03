@@ -63,3 +63,11 @@ jacocoTestReport {
 		xml.required = true
 	}
 }
+
+sonar {
+	properties {
+		property 'sonar.projectKey', 'kyle-recktenwald_runners-util-java-backend-0.0.2'
+		property 'sonar.organization', 'kyle-recktenwald'
+		property 'sonar.host.url', 'https://sonarcloud.io'
+	}
+}
