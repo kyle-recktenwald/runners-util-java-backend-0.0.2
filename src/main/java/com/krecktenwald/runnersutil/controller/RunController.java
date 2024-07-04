@@ -10,6 +10,7 @@ import com.krecktenwald.runnersutil.exceptions.EntityNotFoundException;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
 import com.krecktenwald.runnersutil.repositories.RunRepository;
 import com.krecktenwald.runnersutil.security.JwtService;
+import com.krecktenwald.runnersutil.service.RunService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,29 +42,26 @@ public class RunController {
   private final RouteRepository routeRepository;
   private final DtoMapper dtoMapper;
   private final JwtService jwtService;
+  private final RunService runService;
 
   public RunController(
       RunRepository runRepository,
       RouteRepository routeRepository,
       DtoMapper dtoMapper,
-      JwtService jwtService) {
+      JwtService jwtService,
+      RunService runService
+      ) {
     this.runRepository = runRepository;
     this.routeRepository = routeRepository;
     this.dtoMapper = dtoMapper;
     this.jwtService = jwtService;
+    this.runService = runService;
   }
 
   @GetMapping
   @PreAuthorize("hasRole('ROLE_app_admin')")
   public Set<RunDto> getRuns() {
-    Set<RunDto> runDtos = new HashSet<>();
-    for (Run run : runRepository.findAll()) {
-      RunDto runDto = dtoMapper.runToRunDTO(run);
-      runDto.setRoute(dtoMapper.routeToRouteDTO(run.getRoute()));
-      runDtos.add(runDto);
-    }
-
-    return runDtos;
+    return runService.getRuns();
   }
 
   @GetMapping("/{id}")
