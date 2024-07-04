@@ -1,4 +1,4 @@
-package com.krecktenwald.runnersutil.controllers;
+package com.krecktenwald.runnersutil.controller;
 
 import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.CreateRunDto;

@@ -1,4 +1,4 @@
-package com.krecktenwald.runnersutil.controllers;
+package com.krecktenwald.runnersutil.controller;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
