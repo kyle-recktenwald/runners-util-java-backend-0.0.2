@@ -15,6 +15,10 @@ spotless {
 	}
 }
 
+tasks.named('build') {
+	dependsOn 'spotlessApply'
+}
+
 group = 'com.krecktenwald'
 version = '0.0.1-SNAPSHOT'
 
