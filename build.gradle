@@ -7,16 +7,14 @@ plugins {
 	id "jacoco"
 }
 
+defaultTasks 'spotlessApply', 'build'
+
 spotless {
 	java {
 		target '**/*.java'
 		googleJavaFormat()
 		removeUnusedImports()
 	}
-}
-
-tasks.named('build') {
-	dependsOn 'spotlessApply'
 }
 
 group = 'com.krecktenwald'

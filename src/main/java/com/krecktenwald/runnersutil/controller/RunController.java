@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
@@ -49,8 +48,7 @@ public class RunController {
       RouteRepository routeRepository,
       DtoMapper dtoMapper,
       JwtService jwtService,
-      RunService runService
-      ) {
+      RunService runService) {
     this.runRepository = runRepository;
     this.routeRepository = routeRepository;
     this.dtoMapper = dtoMapper;
