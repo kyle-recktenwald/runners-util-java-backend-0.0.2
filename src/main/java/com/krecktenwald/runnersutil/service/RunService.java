@@ -5,4 +5,6 @@ import java.util.Set;
 
 public interface RunService {
   Set<RunDto> getRuns();
+
+  RunDto getRun(String id);
 }

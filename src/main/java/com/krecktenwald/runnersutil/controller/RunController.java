@@ -6,7 +6,6 @@ import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
 import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
-import com.krecktenwald.runnersutil.exceptions.EntityNotFoundException;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
 import com.krecktenwald.runnersutil.repositories.RunRepository;
 import com.krecktenwald.runnersutil.security.JwtService;
@@ -64,14 +63,7 @@ public class RunController {
 
   @GetMapping("/{id}")
   public RunDto getRun(@PathVariable String id) {
-    Run run = runRepository.findById(id).orElse(null);
-    if (run == null) {
-      String errorMessage = "Run with ID " + id + " not found";
-      logger.error(errorMessage);
-      throw new EntityNotFoundException(errorMessage);
-    }
-
-    return dtoMapper.runToRunDTO(run);
+    return runService.getRun(id);
   }
 
   @PostMapping
