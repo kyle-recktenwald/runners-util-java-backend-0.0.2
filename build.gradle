@@ -7,7 +7,7 @@ plugins {
 	id "jacoco"
 }
 
-defaultTasks 'spotlessApply', 'build', 'test'
+defaultTasks 'spotlessApply', 'clean', 'build', 'test'
 
 spotless {
 	java {
