@@ -3,7 +3,6 @@ package com.krecktenwald.runnersutil.controller;
 import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.CreateRunDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
-import com.krecktenwald.runnersutil.domain.entities.CrudEntityInfo;
 import com.krecktenwald.runnersutil.domain.entities.Route;
 import com.krecktenwald.runnersutil.domain.entities.Run;
 import com.krecktenwald.runnersutil.repositories.RouteRepository;
@@ -11,11 +10,9 @@ import com.krecktenwald.runnersutil.repositories.RunRepository;
 import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.RunService;
 import jakarta.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -70,31 +67,7 @@ public class RunController {
   @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
   public ResponseEntity<RunDto> createRun(@RequestBody @Valid CreateRunDto createRunDto)
       throws URISyntaxException {
-    Run run = dtoMapper.map(createRunDto);
-    run.setRunId(String.format("run_%s", UUID.randomUUID()));
-
-    if (createRunDto.getUserId() != null) {
-      run.setUserId(createRunDto.getUserId());
-    }
-
-    String creatorUserId = jwtService.getUserIdFromJwt();
-    CrudEntityInfo crudEntityInfo = new CrudEntityInfo(creatorUserId);
-    run.setCrudEntityInfo(crudEntityInfo);
-
-    if (createRunDto.getRouteId() != null) {
-      Route route = routeRepository.findById(createRunDto.getRouteId()).orElse(null);
-      if (route != null) {
-        run.setRoute(route);
-      } else {
-        logger.warn("Route does not exist. Run's route will be set to null.");
-      }
-    }
-
-    Run createdRun = runRepository.save(run);
-    RunDto createdRunDto = dtoMapper.runToRunDTO(createdRun);
-    createdRunDto.setRoute(dtoMapper.routeToRouteDTO(createdRun.getRoute()));
-
-    return ResponseEntity.created(new URI("/runs/" + createdRunDto.getRunId())).body(createdRunDto);
+    return runService.createRun(createRunDto);
   }
 
   @PutMapping("/{id}")
