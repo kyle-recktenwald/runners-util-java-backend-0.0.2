@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RunServiceImpl implements RunService {
 
-  private static final Logger logger = LogManager.getLogger(RunController.class);
+  private static final Logger logger = LogManager.getLogger(RunServiceImpl.class);
 
   private final RunRepository runRepository;
   private final DtoMapper dtoMapper;
