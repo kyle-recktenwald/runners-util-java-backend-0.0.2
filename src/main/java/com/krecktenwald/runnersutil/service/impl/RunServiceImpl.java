@@ -14,6 +14,7 @@ import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.RunService;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -96,5 +97,50 @@ public class RunServiceImpl implements RunService {
     createdRunDto.setRoute(dtoMapper.routeToRouteDTO(createdRun.getRoute()));
 
     return ResponseEntity.created(new URI("/runs/" + createdRunDto.getRunId())).body(createdRunDto);
+  }
+
+  @Override
+  public ResponseEntity<RunDto> updateRun(String id, CreateRunDto createRunDto) {
+    Run existingRun = runRepository.findById(id).orElseThrow(RuntimeException::new);
+
+    existingRun.setDistance(createRunDto.getDistance());
+    existingRun.setStartDateTime(createRunDto.getStartDateTime());
+    existingRun.setDuration(createRunDto.getDuration());
+    existingRun.setUserId(createRunDto.getUserId());
+
+    if (createRunDto.getRouteId() != null) {
+      Route route = routeRepository.findById(createRunDto.getRouteId()).orElse(null);
+      if (route != null) {
+        existingRun.setRoute(route);
+      } else {
+        logger.warn(
+            String.format(
+                "Route with ID %s does not exist. Run's existing route will not be changed.",
+                createRunDto.getRouteId()));
+      }
+    }
+
+    existingRun.getCrudEntityInfo().setUpdateDate(new Date());
+    String updaterUserId = jwtService.getUserIdFromJwt();
+    if (updaterUserId != null) {
+      existingRun.getCrudEntityInfo().setUpdatedBy(updaterUserId);
+    } else {
+      logger.error("No user found.");
+      // TODO: Throw UserNotFoundException
+    }
+
+    Run updatedRun = runRepository.save(existingRun);
+
+    RunDto updatedRunDto = dtoMapper.runToRunDTO(updatedRun);
+    updatedRunDto.setRoute(dtoMapper.routeToRouteDTO(updatedRun.getRoute()));
+
+    return ResponseEntity.ok(updatedRunDto);
+  }
+
+  @Override
+  public ResponseEntity<RunDto> deleteRun(String id) {
+    // TODO: Throw EntityNotFound Exception
+    runRepository.deleteById(id);
+    return ResponseEntity.ok().build();
   }
 }

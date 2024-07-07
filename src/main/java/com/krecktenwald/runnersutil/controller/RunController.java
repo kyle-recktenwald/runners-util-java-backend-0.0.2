@@ -1,17 +1,10 @@
 package com.krecktenwald.runnersutil.controller;
 
-import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.CreateRunDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
-import com.krecktenwald.runnersutil.domain.entities.Route;
-import com.krecktenwald.runnersutil.domain.entities.Run;
-import com.krecktenwald.runnersutil.repositories.RouteRepository;
-import com.krecktenwald.runnersutil.repositories.RunRepository;
-import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.RunService;
 import jakarta.validation.Valid;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,22 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class RunController {
   private static final Logger logger = LogManager.getLogger(RunController.class);
 
-  private final RunRepository runRepository;
-  private final RouteRepository routeRepository;
-  private final DtoMapper dtoMapper;
-  private final JwtService jwtService;
   private final RunService runService;
 
-  public RunController(
-      RunRepository runRepository,
-      RouteRepository routeRepository,
-      DtoMapper dtoMapper,
-      JwtService jwtService,
-      RunService runService) {
-    this.runRepository = runRepository;
-    this.routeRepository = routeRepository;
-    this.dtoMapper = dtoMapper;
-    this.jwtService = jwtService;
+  public RunController(RunService runService) {
     this.runService = runService;
   }
 
@@ -73,46 +53,11 @@ public class RunController {
   @PutMapping("/{id}")
   public ResponseEntity<RunDto> updateRun(
       @PathVariable String id, @RequestBody @Valid CreateRunDto createRunDto) {
-    Run existingRun = runRepository.findById(id).orElseThrow(RuntimeException::new);
-
-    existingRun.setDistance(createRunDto.getDistance());
-    existingRun.setStartDateTime(createRunDto.getStartDateTime());
-    existingRun.setDuration(createRunDto.getDuration());
-    existingRun.setUserId(createRunDto.getUserId());
-
-    if (createRunDto.getRouteId() != null) {
-      Route route = routeRepository.findById(createRunDto.getRouteId()).orElse(null);
-      if (route != null) {
-        existingRun.setRoute(route);
-      } else {
-        logger.warn(
-            String.format(
-                "Route with ID %s does not exist. Run's existing route will not be changed.",
-                createRunDto.getRouteId()));
-      }
-    }
-
-    existingRun.getCrudEntityInfo().setUpdateDate(new Date());
-    String updaterUserId = jwtService.getUserIdFromJwt();
-    if (updaterUserId != null) {
-      existingRun.getCrudEntityInfo().setUpdatedBy(updaterUserId);
-    } else {
-      logger.error("No user found.");
-      // TODO: Throw UserNotFoundException
-    }
-
-    Run updatedRun = runRepository.save(existingRun);
-
-    RunDto updatedRunDto = dtoMapper.runToRunDTO(updatedRun);
-    updatedRunDto.setRoute(dtoMapper.routeToRouteDTO(updatedRun.getRoute()));
-
-    return ResponseEntity.ok(updatedRunDto);
+    return runService.updateRun(id, createRunDto);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<RunDto> deleteRun(@PathVariable String id) {
-    // TODO: Throw EntityNotFound Exception
-    runRepository.deleteById(id);
-    return ResponseEntity.ok().build();
+    return runService.deleteRun(id);
   }
 }

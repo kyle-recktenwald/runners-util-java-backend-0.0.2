@@ -12,4 +12,8 @@ public interface RunService {
   RunDto getRun(String id);
 
   ResponseEntity<RunDto> createRun(CreateRunDto createRunDto) throws URISyntaxException;
+
+  ResponseEntity<RunDto> updateRun(String id, CreateRunDto createRunDto);
+
+  ResponseEntity<RunDto> deleteRun(String id);
 }
