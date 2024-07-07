@@ -14,10 +14,7 @@ import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.RunService;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +46,8 @@ public class RunServiceImpl implements RunService {
   @Override
   public Set<RunDto> getRuns() {
     Set<RunDto> runDtos = new HashSet<>();
-    for (Run run : runRepository.findAll()) {
+    List<Run> runs = runRepository.findAll();
+    for (Run run : runs) {
       RunDto runDto = dtoMapper.runToRunDTO(run);
       runDto.setRoute(dtoMapper.routeToRouteDTO(run.getRoute()));
       runDtos.add(runDto);
