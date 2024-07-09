@@ -1,6 +1,5 @@
 package com.krecktenwald.runnersutil.service.impl;
 
-import com.krecktenwald.runnersutil.controller.RunController;
 import com.krecktenwald.runnersutil.domain.dto.mapper.DtoMapper;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.CreateRunDto;
 import com.krecktenwald.runnersutil.domain.dto.mapper.impl.run.RunDto;
