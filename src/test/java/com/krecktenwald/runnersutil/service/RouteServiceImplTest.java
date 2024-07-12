@@ -42,7 +42,6 @@ class RouteServiceImplTest {
   private Route route;
   private RouteDto routeDto;
   private CreateRouteDto createRouteDto;
-
   private Route existingRoute;
   private RouteDto existingRouteDto;
 
@@ -131,7 +130,7 @@ class RouteServiceImplTest {
   }
 
   @Test
-  void testUpdateRun() {
+  void testUpdateRoute() {
     when(routeRepository.findById(EXISTING_ROUTE_ID)).thenReturn(Optional.of(existingRoute));
     when(jwtService.getUserIdFromJwt()).thenReturn(USER_ID);
     when(routeRepository.save(existingRoute)).thenReturn(existingRoute);
@@ -151,7 +150,7 @@ class RouteServiceImplTest {
   }
 
   @Test
-  void testDeleteRun() {
+  void testDeleteRoute() {
     doNothing().when(routeRepository).deleteById(anyString());
 
     ResponseEntity<RouteDto> result = routeService.deleteRoute(ROUTE_ID);
