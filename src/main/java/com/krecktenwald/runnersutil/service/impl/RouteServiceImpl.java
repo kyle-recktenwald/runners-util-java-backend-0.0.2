@@ -11,10 +11,7 @@ import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.RouteService;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +36,8 @@ public class RouteServiceImpl implements RouteService {
   @Override
   public Set<RouteDto> getRoutes() {
     Set<RouteDto> routeDtos = new HashSet<>();
-    for (Route route : routeRepository.findAll()) {
+    List<Route> routes = routeRepository.findAll();
+    for (Route route : routes) {
       routeDtos.add(dtoMapper.routeToRouteDTO(route));
     }
 

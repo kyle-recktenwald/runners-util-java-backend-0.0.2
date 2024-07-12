@@ -29,16 +29,13 @@ class RunServiceImplTest {
 
   private static final String RUN_WITH_ROUTE_ID = "run_6d43fe7f-a85f-4b53-a074-b15116cea51b";
   private static final String RUN_WITH_NO_ROUTE_ID = "route_1dbfc1a8-e7e5-43ac-a975-438f350b6963";
-  public static final String ROUTE_ID = "route_1dbfc1a8-e7e5-43ac-a975-438f350b6963";
-  public static final String EXISTING_RUN_ID = "run_4c2898b1-3087-4260-8406-6591a11794bb";
-  public static final String USER_ID = "a11226da-a3c8-41c1-bce7-83fbcfb68ca8";
+  private static final String ROUTE_ID = "route_1dbfc1a8-e7e5-43ac-a975-438f350b6963";
+  private static final String EXISTING_RUN_ID = "run_4c2898b1-3087-4260-8406-6591a11794bb";
+  private static final String USER_ID = "a11226da-a3c8-41c1-bce7-83fbcfb68ca8";
 
   @Mock private RunRepository runRepository;
-
   @Mock private DtoMapper dtoMapper;
-
   @Mock private JwtService jwtService;
-
   @Mock private RouteRepository routeRepository;
 
   @InjectMocks private RunServiceImpl runService;
@@ -115,7 +112,7 @@ class RunServiceImplTest {
 
   @Test
   void testGetRun() {
-    when(runRepository.findById(anyString())).thenReturn(Optional.of(runWithRoute));
+    when(runRepository.findById(RUN_WITH_ROUTE_ID)).thenReturn(Optional.of(runWithRoute));
     when(dtoMapper.runToRunDTO(runWithRoute)).thenReturn(runWithRouteDto);
 
     RunDto result = runService.getRun(RUN_WITH_ROUTE_ID);
