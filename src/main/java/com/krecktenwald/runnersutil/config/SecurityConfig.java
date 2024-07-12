@@ -1,6 +1,5 @@
 package com.krecktenwald.runnersutil.config;
 
-import com.krecktenwald.runnersutil.security.JwtAuthConverter;
 import com.krecktenwald.runnersutil.security.KeycloakRoleConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,11 +19,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-  public static final String ADMIN = "admin";
-  public static final String USER = "user";
-  public static final String DEVELOPER = "developer";
-
-  private final JwtAuthConverter jwtAuthConverter;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,15 +27,7 @@ public class SecurityConfig {
 
     http.cors()
         .and()
-        .authorizeHttpRequests(
-            authorize ->
-                authorize
-                    .requestMatchers(HttpMethod.GET, "/api/admin", "/api/admin/**")
-                    .hasRole(ADMIN)
-                    .requestMatchers(HttpMethod.GET, "/api/runs", "/api/runs/**")
-                    .hasRole(USER)
-                    .anyRequest()
-                    .authenticated())
+        .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
         .oauth2ResourceServer(
             oauth2 ->
                 oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
