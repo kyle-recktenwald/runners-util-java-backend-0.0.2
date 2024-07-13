@@ -14,8 +14,18 @@ updates:
     directory: "/.github/workflows"
     schedule:
       interval: "weekly"
+    assignees:
+      - "kyle-recktenwald"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 10
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
+    assignees:
+      - "kyle-recktenwald"
+    labels:
+      - "dependencies"
+    open-pull-requests-limit: 10
