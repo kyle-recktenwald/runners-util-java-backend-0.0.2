@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 public interface RunService {
   Set<RunDto> getRuns();
 
+  Set<RunDto> getRunsByUserId(String userId);
+
   RunDto getRun(String id);
 
   ResponseEntity<RunDto> createRun(CreateRunDto createRunDto) throws URISyntaxException;

@@ -83,6 +83,24 @@ class RouteServiceImplTest {
   }
 
   @Test
+  void testGetRoutesByUserId() {
+    List<Route> routes = new ArrayList<>();
+    routes.add(route);
+
+    when(routeRepository.findAllByUserId(USER_ID)).thenReturn(routes);
+    when(dtoMapper.routeToRouteDTO(route)).thenReturn(routeDto);
+
+    Set<RouteDto> result = routeService.getRoutesByUserId(USER_ID);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(1, result.size());
+
+    verify(routeRepository, times(1)).findAllByUserId(USER_ID);
+    verify(dtoMapper, times(1)).routeToRouteDTO(route);
+  }
+
+  @Test
   void testGetRoute() {
     when(routeRepository.findById(ROUTE_ID)).thenReturn(Optional.of(route));
     when(dtoMapper.routeToRouteDTO(route)).thenReturn(routeDto);

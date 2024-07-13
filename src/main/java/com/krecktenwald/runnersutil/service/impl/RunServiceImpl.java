@@ -56,6 +56,19 @@ public class RunServiceImpl implements RunService {
   }
 
   @Override
+  public Set<RunDto> getRunsByUserId(String userId) {
+    Set<RunDto> runDtos = new HashSet<>();
+    List<Run> runs = runRepository.findAllByUserId(userId);
+    for (Run run : runs) {
+      RunDto runDto = dtoMapper.runToRunDTO(run);
+      runDto.setRoute(dtoMapper.routeToRouteDTO(run.getRoute()));
+      runDtos.add(runDto);
+    }
+
+    return runDtos;
+  }
+
+  @Override
   public RunDto getRun(String id) {
     Run run = runRepository.findById(id).orElse(null);
     if (run == null) {

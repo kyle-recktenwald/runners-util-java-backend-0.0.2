@@ -111,6 +111,29 @@ class RunServiceImplTest {
   }
 
   @Test
+  void testGetRunsByUserId() {
+    List<Run> runs = new ArrayList<>();
+    runs.add(runWithRoute);
+    runs.add(runWithNoRoute);
+
+    when(runRepository.findAllByUserId(USER_ID)).thenReturn(runs);
+    when(dtoMapper.runToRunDTO(runWithRoute)).thenReturn(runWithRouteDto);
+    when(dtoMapper.routeToRouteDTO(route)).thenReturn(routeDto);
+    when(dtoMapper.runToRunDTO(runWithNoRoute)).thenReturn(runWithNoRouteDto);
+
+    Set<RunDto> result = runService.getRunsByUserId(USER_ID);
+
+    assertNotNull(result);
+    assertFalse(result.isEmpty());
+    assertEquals(2, result.size());
+
+    verify(runRepository, times(1)).findAllByUserId(USER_ID);
+    verify(dtoMapper, times(1)).runToRunDTO(runWithRoute);
+    verify(dtoMapper, times(1)).routeToRouteDTO(route);
+    verify(dtoMapper, times(1)).runToRunDTO(runWithNoRoute);
+  }
+
+  @Test
   void testGetRun() {
     when(runRepository.findById(RUN_WITH_ROUTE_ID)).thenReturn(Optional.of(runWithRoute));
     when(dtoMapper.runToRunDTO(runWithRoute)).thenReturn(runWithRouteDto);
