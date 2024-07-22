@@ -1,5 +1,5 @@
 # Use a JDK image as the base image
-FROM amazoncorretto:21.0.3
+FROM amazoncorretto:21.0.4
 
 # Set the working directory in the container
 WORKDIR /app
