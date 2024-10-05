@@ -40,15 +40,21 @@ services:
       KC_PROXY_MODE: edge
       KC_METRICS_ENABLED: true
       KC_HTTP_ENABLED: true
-      KC_HTTP_PORT: 8180
+      KC_HTTPS_ENABLED: true
+      KC_HTTPS_PORT: 8443
+      KC_HOSTNAME_STRICT_HTTPS: true
+      KC_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/keycloak.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/keycloak.key
     networks:
       - runners_util_network
     ports:
       - "8180:8180"
+      - "8443:8443"
     depends_on:
       - postgresql
     volumes:
       - ./realm-export.json:/opt/bitnami/keycloak/realm-export.json
+      - ../certs:/opt/bitnami/keycloak/certs
     restart: always
 
   backend-service:

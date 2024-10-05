@@ -2651,7 +2651,7 @@
     "clientId" : "runner-utils-app-client",
     "name" : "Runner Utils App Client",
     "description" : "",
-    "rootUrl" : "http://localhost:3000",
+    "rootUrl" : "https://localhost:3000",
     "adminUrl" : "",
     "baseUrl" : "",
     "surrogateAuthRequired" : false,

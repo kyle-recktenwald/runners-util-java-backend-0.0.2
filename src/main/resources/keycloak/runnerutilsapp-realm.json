@@ -597,7 +597,7 @@
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "hCl1BLUuvqFmpWKnE6VLXTYv6rba9BmJ",
-    "redirectUris" : [ "http://localhost:3000/*" ],
+    "redirectUris" : [ "https://localhost:3000/*" ],
     "webOrigins" : [ "" ],
     "notBefore" : 0,
     "bearerOnly" : false,

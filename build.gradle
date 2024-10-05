@@ -41,6 +41,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'com.google.googlejavaformat:google-java-format:1.22.0'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
