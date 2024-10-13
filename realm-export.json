@@ -2651,15 +2651,22 @@
     "clientId" : "runner-utils-app-client",
     "name" : "Runner Utils App Client",
     "description" : "",
-    "rootUrl" : "https://localhost:3000",
+    "rootUrl" : "https://runnersutil.local",
     "adminUrl" : "",
     "baseUrl" : "",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/*", "https://oauth.pstmn.io/v1/callback" ],
-    "webOrigins" : [ "+" ],
+    "redirectUris": [
+      "http://localhost:3000/*",
+      "https://oauth.pstmn.io/v1/callback",
+      "https://runnersutil.local/api/auth/oauth/callback"
+    ],
+    "webOrigins": [
+      "http://localhost:3000",
+      "+"
+    ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,

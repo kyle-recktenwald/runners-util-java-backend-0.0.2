@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -45,6 +45,6 @@ public class AuthController {
       authService.initializeAuth(code, response);
     }
 
-    return new RedirectView("https://localhost:3000");
+    return new RedirectView("http://localhost:3000");
   }
 }

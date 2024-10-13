@@ -40,16 +40,14 @@ services:
       KC_PROXY_MODE: edge
       KC_METRICS_ENABLED: true
       KC_HTTP_ENABLED: true
-      KC_HTTPS_ENABLED: true
-      KC_HTTPS_PORT: 8443
-      KC_HOSTNAME_STRICT_HTTPS: true
-      KC_HTTPS_CERTIFICATE_FILE: /opt/bitnami/keycloak/certs/keycloak.crt
-      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/bitnami/keycloak/certs/keycloak.key
+      KC_HTTP_PORT: 8180
+      KC_HTTPS_ENABLED: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_RELATIVE_PATH: /auth
     networks:
       - runners_util_network
     ports:
       - "8180:8180"
-      - "8443:8443"
     depends_on:
       - postgresql
     volumes:
@@ -74,13 +72,31 @@ services:
       - runners_util_network
 
   frontend-service:
-    build: ~/Desktop/Repositories/Runner-Utils/runners-util-react-frontend-0.0.4
+    build: ~/Desktop/Repositories/Runner-Utils/runners-util-react-frontend-v5
     container_name: frontend-service
     hostname: frontend-service
     ports:
       - "3000:3000"
     depends_on:
       - backend-service
+    networks:
+      - runners_util_network
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    hostname: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ../certs:/etc/nginx/certs
+    depends_on:
+      - frontend-service
+      - backend-service
+      - auth-service
     networks:
       - runners_util_network
     restart: always
