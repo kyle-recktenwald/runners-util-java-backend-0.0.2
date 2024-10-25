@@ -2661,7 +2661,8 @@
     "redirectUris": [
       "http://localhost:3000/*",
       "https://oauth.pstmn.io/v1/callback",
-      "https://runnersutil.local/api/auth/oauth/callback"
+      "https://runnersutil.local/api/auth/public/oauth/callback",
+      "http://backend-service:8080/api/auth/public/oauth/callback"
     ],
     "webOrigins": [
       "http://localhost:3000",

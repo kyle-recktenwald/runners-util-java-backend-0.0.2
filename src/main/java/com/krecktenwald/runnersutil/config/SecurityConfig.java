@@ -39,7 +39,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorizeHttpRequestsConfig ->
                 authorizeHttpRequestsConfig
-                    .requestMatchers("/auth/**")
+                    .requestMatchers("/auth/public/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
@@ -48,9 +48,6 @@ public class SecurityConfig {
             oauth2ResourceServerConfig ->
                 oauth2ResourceServerConfig.jwt(
                     jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
-
-    // Add our custom JwtTokenFilter before the default UsernamePasswordAuthenticationFilter
-    // http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

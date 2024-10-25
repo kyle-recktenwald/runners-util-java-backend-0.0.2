@@ -1,17 +1,21 @@
 package com.krecktenwald.runnersutil.service.impl;
 
+import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.AuthService;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -25,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
   private static final Logger logger = LogManager.getLogger(AuthServiceImpl.class);
 
   private final WebClient webClient;
+  private final JwtService jwtService;
   private final String baseAuthUri;
   private final String baseTokenUri;
   private final String clientId;
@@ -36,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
   @Autowired
   public AuthServiceImpl(
       WebClient webClient,
+      JwtService jwtService,
       @Value("${keycloak.oauth2.auth-uri}") String baseAuthUri,
       @Value("${keycloak.oauth2.token-uri}") String baseTokenUri,
       @Value("${jwt.auth.converter.resource-id}") String clientId,
@@ -45,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
       @Value("${keycloak.oauth2.code-challenge}") String codeChallenge,
       @Value("${keycloak.oauth2.code-verifier}") String codeVerifier) {
     this.webClient = webClient;
+    this.jwtService = jwtService;
     this.baseAuthUri = baseAuthUri;
     this.baseTokenUri = baseTokenUri;
     this.clientId = clientId;
@@ -68,6 +75,17 @@ public class AuthServiceImpl implements AuthService {
     Mono<String> jwtResponse = fetchJwt(code);
     String result = jwtResponse.block();
     setCookie(parseAccessToken(result), response);
+  }
+
+  @Override
+  public ResponseEntity<?> isAuthenticated(HttpServletRequest request) {
+    String token = jwtService.getJwtFromCookie(request);
+
+    if (jwtService.isValidToken(token)) {
+      return ResponseEntity.ok(Map.of("isAuthenticated", true));
+    } else {
+      return ResponseEntity.ok(Map.of("isAuthenticated", false));
+    }
   }
 
   private URI buildAuthUri() {

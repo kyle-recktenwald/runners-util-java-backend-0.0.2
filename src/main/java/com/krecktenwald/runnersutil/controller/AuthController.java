@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +29,12 @@ public class AuthController {
     this.authService = authService;
   }
 
-  @GetMapping("/oauth/login")
+  @GetMapping("/public/oauth/login")
   public void login(HttpServletResponse response) {
     authService.handleLogin(response);
   }
 
-  @GetMapping(value = "/oauth/callback")
+  @GetMapping(value = "/public/oauth/callback")
   @PermitAll
   public RedirectView oauthCallback(
       @RequestParam(name = "code", required = false) String code,
@@ -45,6 +46,11 @@ public class AuthController {
       authService.initializeAuth(code, response);
     }
 
-    return new RedirectView("http://localhost:3000");
+    return new RedirectView("https://runnersutil.local");
+  }
+
+  @GetMapping("/oauth/isAuthenticated")
+  public ResponseEntity<?> isAuthenticated(HttpServletRequest request) {
+    return authService.isAuthenticated(request);
   }
 }
