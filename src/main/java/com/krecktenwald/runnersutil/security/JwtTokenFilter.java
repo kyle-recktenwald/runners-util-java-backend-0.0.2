@@ -32,6 +32,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+    setAuthenticationWithJwtInRequestCookie(request);
+
+    try {
+      filterChain.doFilter(request, response);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (ServletException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void setAuthenticationWithJwtInRequestCookie(HttpServletRequest request) {
     Cookie[] cookies = request.getCookies();
 
     if (cookies != null) {
@@ -60,14 +72,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                   SecurityContextHolder.clearContext();
                 }
               });
-    }
-
-    try {
-      filterChain.doFilter(request, response);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (ServletException e) {
-      throw new RuntimeException(e);
     }
   }
 
