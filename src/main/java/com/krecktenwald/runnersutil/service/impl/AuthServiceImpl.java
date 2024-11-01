@@ -1,5 +1,6 @@
 package com.krecktenwald.runnersutil.service.impl;
 
+import com.krecktenwald.runnersutil.domain.util.auth.JwtValues;
 import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.AuthService;
 import com.nimbusds.jose.shaded.gson.JsonObject;
@@ -74,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
   public void initializeAuth(String code, HttpServletResponse response) {
     Mono<String> jwtResponse = fetchJwt(code);
     String result = jwtResponse.block();
-    setCookie(parseAccessToken(result), response);
+    setCookies(parseAccessToken(result), response);
   }
 
   @Override
@@ -119,26 +120,71 @@ public class AuthServiceImpl implements AuthService {
         .bodyToMono(String.class);
   }
 
-  private String parseAccessToken(String jwt) {
+  private JwtValues parseAccessToken(String jwt) {
     JsonObject jsonObject = JsonParser.parseString(jwt).getAsJsonObject();
-    return jsonObject.get("access_token").getAsString();
+    String accessToken = jsonObject.get("access_token").getAsString();
+    String refreshToken = jsonObject.get("refresh_token").getAsString();
+    String accessExpiresIn = jsonObject.get("expires_in").getAsString();
+    String refreshExpiresIn = jsonObject.get("refresh_expires_in").getAsString();
+    String idToken = jsonObject.get("id_token").getAsString();
+
+    return new JwtValues(accessToken, refreshToken, accessExpiresIn, refreshExpiresIn, idToken);
   }
 
-  private void setCookie(String jwt, HttpServletResponse response) {
-    Cookie cookie = new Cookie("access_token", jwt);
+  private void setCookies(JwtValues jwtValues, HttpServletResponse response) {
+    setAccessTokenCookie(jwtValues, response);
+    setAccessTokenExpiryCookie(jwtValues, response);
+    setRefreshTokenCookie(jwtValues, response);
+    setRefreshTokenExpiryCookie(jwtValues, response);
+  }
+
+  private static void setAccessTokenCookie(JwtValues jwtValues, HttpServletResponse response) {
+    Cookie accessTokenCookie = new Cookie("access_token", jwtValues.accessToken());
+    accessTokenCookie.setHttpOnly(true);
+    accessTokenCookie.setSecure(true);
+    accessTokenCookie.setPath("/");
+    accessTokenCookie.setMaxAge(Integer.parseInt(jwtValues.accessExpiresIn()));
+
+    response.addCookie(accessTokenCookie);
+  }
+
+  private static void setAccessTokenExpiryCookie(
+      JwtValues jwtValues, HttpServletResponse response) {
+    long expirationTimeMillis =
+        System.currentTimeMillis() + (Long.parseLong(jwtValues.accessExpiresIn()) * 1000L);
+
+    Cookie expirationCookie = new Cookie("access_token_exp", String.valueOf(expirationTimeMillis));
+
+    expirationCookie.setPath("/");
+    expirationCookie.setMaxAge(Integer.parseInt(jwtValues.accessExpiresIn()));
+    expirationCookie.setSecure(true);
+    expirationCookie.setHttpOnly(false);
+
+    response.addCookie(expirationCookie);
+  }
+
+  private static void setRefreshTokenCookie(JwtValues jwtValues, HttpServletResponse response) {
+    Cookie cookie = new Cookie("refresh_token", jwtValues.accessToken());
     cookie.setHttpOnly(true);
     cookie.setSecure(true);
     cookie.setPath("/");
-    cookie.setMaxAge(3600);
+    cookie.setMaxAge(Integer.parseInt(jwtValues.accessExpiresIn()));
 
-    String cookieHeaderValue =
-        cookie.getName()
-            + "="
-            + cookie.getValue()
-            + "; HttpOnly; Secure; Path=/; Max-Age="
-            + cookie.getMaxAge()
-            + "; SameSite=None";
+    response.addCookie(cookie);
+  }
 
-    response.setHeader("Set-Cookie", cookieHeaderValue);
+  private static void setRefreshTokenExpiryCookie(
+      JwtValues jwtValues, HttpServletResponse response) {
+    long expirationTimeMillis =
+        System.currentTimeMillis() + (Long.parseLong(jwtValues.accessExpiresIn()) * 1000L);
+
+    Cookie expirationCookie = new Cookie("refresh_token_exp", String.valueOf(expirationTimeMillis));
+
+    expirationCookie.setPath("/");
+    expirationCookie.setMaxAge(Integer.parseInt(jwtValues.refreshExpiresIn()));
+    expirationCookie.setSecure(true);
+    expirationCookie.setHttpOnly(false);
+
+    response.addCookie(expirationCookie);
   }
 }
