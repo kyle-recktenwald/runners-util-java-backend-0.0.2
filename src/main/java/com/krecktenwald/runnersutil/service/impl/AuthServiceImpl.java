@@ -11,12 +11,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -101,17 +99,6 @@ public class AuthServiceImpl implements AuthService {
 
     JwtValues jwtValues = parseAccessToken(result);
     setCookies(jwtValues, response);
-  }
-
-  @Override
-  public ResponseEntity<?> isAuthenticated(HttpServletRequest request) {
-    String token = jwtService.getJwtFromCookie(request);
-
-    if (jwtService.isValidToken(token)) {
-      return ResponseEntity.ok(Map.of("isAuthenticated", true));
-    } else {
-      return ResponseEntity.ok(Map.of("isAuthenticated", false));
-    }
   }
 
   private URI buildAuthUri() {

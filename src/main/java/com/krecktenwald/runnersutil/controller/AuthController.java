@@ -57,9 +57,4 @@ public class AuthController {
       return ResponseEntity.status(401).body(Map.of("message", "Unable to refresh token"));
     }
   }
-
-  @GetMapping("/oauth/isAuthenticated")
-  public ResponseEntity<?> isAuthenticated(HttpServletRequest request) {
-    return authService.isAuthenticated(request);
-  }
 }
