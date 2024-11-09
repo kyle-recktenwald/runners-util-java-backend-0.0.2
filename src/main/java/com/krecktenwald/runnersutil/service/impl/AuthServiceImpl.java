@@ -78,6 +78,31 @@ public class AuthServiceImpl implements AuthService {
     setCookies(parseAccessToken(result), response);
   }
 
+  public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    String refreshToken = jwtService.getRefreshTokenFromCookie(request);
+    if (refreshToken == null) {
+      throw new RuntimeException("No refresh token available");
+    }
+
+    Mono<String> refreshedTokenResponse =
+        webClient
+            .post()
+            .uri(baseTokenUri)
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body(
+                BodyInserters.fromFormData("grant_type", "refresh_token")
+                    .with("client_id", clientId)
+                    .with("client_secret", clientSecret)
+                    .with("refresh_token", refreshToken))
+            .retrieve()
+            .bodyToMono(String.class);
+
+    String result = refreshedTokenResponse.block();
+
+    JwtValues jwtValues = parseAccessToken(result);
+    setCookies(jwtValues, response);
+  }
+
   @Override
   public ResponseEntity<?> isAuthenticated(HttpServletRequest request) {
     String token = jwtService.getJwtFromCookie(request);
@@ -164,7 +189,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   private static void setRefreshTokenCookie(JwtValues jwtValues, HttpServletResponse response) {
-    Cookie cookie = new Cookie("refresh_token", jwtValues.accessToken());
+    Cookie cookie = new Cookie("refresh_token", jwtValues.refreshToken());
     cookie.setHttpOnly(true);
     cookie.setSecure(true);
     cookie.setPath("/");

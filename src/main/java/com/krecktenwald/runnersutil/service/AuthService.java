@@ -9,5 +9,7 @@ public interface AuthService {
 
   void initializeAuth(String code, HttpServletResponse response);
 
+  void refreshToken(HttpServletRequest request, HttpServletResponse response);
+
   ResponseEntity<?> isAuthenticated(HttpServletRequest request);
 }

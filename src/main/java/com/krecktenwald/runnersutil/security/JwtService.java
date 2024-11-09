@@ -49,6 +49,20 @@ public class JwtService {
     return jwtCookie.map(Cookie::getValue).orElse(null);
   }
 
+  public String getRefreshTokenFromCookie(HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+    if (cookies == null) {
+      return null;
+    }
+
+    Optional<Cookie> jwtCookie =
+        Arrays.stream(cookies)
+            .filter(cookie -> "refresh_token".equals(cookie.getName()))
+            .findFirst();
+
+    return jwtCookie.map(Cookie::getValue).orElse(null);
+  }
+
   public boolean isValidToken(String token) {
     try {
       Jwt jwt = jwtDecoder.decode(token);

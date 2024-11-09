@@ -4,15 +4,13 @@ import com.krecktenwald.runnersutil.service.AuthService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -47,6 +45,17 @@ public class AuthController {
     }
 
     return new RedirectView("https://runnersutil.local");
+  }
+
+  @PostMapping("/oauth/refresh")
+  public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      authService.refreshToken(request, response);
+      return ResponseEntity.ok(Map.of("message", "Token refreshed successfully"));
+    } catch (Exception e) {
+      logger.error("Failed to refresh token", e);
+      return ResponseEntity.status(401).body(Map.of("message", "Unable to refresh token"));
+    }
   }
 
   @GetMapping("/oauth/isAuthenticated")
