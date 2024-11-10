@@ -6,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: runners_util_db
+      POSTGRES_DB: recktenwald_db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
@@ -29,8 +29,8 @@ services:
       DB_VENDOR: postgres
       DB_ADDR: postgresql
       DB_PORT: 5432
-      DB_SCHEMA: public
-      DB_DATABASE: runners_util_db
+      DB_SCHEMA: auth
+      DB_DATABASE: recktenwald_db
       DB_USER: admin
       DB_PASSWORD: admin
       KEYCLOAK_ADMIN: admin
@@ -64,7 +64,7 @@ services:
     depends_on:
       - auth-service
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/runners_util_db?serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/recktenwald_db?currentSchema=runners_util
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
     restart: always
