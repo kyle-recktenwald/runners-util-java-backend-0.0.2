@@ -44,3 +44,6 @@ src/main/generated/
 ### Local Environment Properties:
 src/main/resources/application-local.properties
 src/main/resources/keystore.jks
+
+### Keycloak:
+resources/keycloak/runnerutilsapp-realm.json
