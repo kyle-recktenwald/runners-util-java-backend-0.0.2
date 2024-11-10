@@ -57,4 +57,15 @@ public class AuthController {
       return ResponseEntity.status(401).body(Map.of("message", "Unable to refresh token"));
     }
   }
+
+  @PostMapping("/oauth/logout")
+  public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+    try {
+      authService.logout(request, response);
+      return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    } catch (Exception e) {
+      logger.error("Failed to logout", e);
+      return ResponseEntity.status(500).body(Map.of("message", "Logout failed"));
+    }
+  }
 }

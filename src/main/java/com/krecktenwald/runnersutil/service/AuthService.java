@@ -9,4 +9,6 @@ public interface AuthService {
   void initializeAuth(String code, HttpServletResponse response);
 
   void refreshToken(HttpServletRequest request, HttpServletResponse response);
+
+  void logout(HttpServletRequest request, HttpServletResponse response);
 }

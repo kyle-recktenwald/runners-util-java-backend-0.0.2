@@ -31,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
   private final JwtService jwtService;
   private final String baseAuthUri;
   private final String baseTokenUri;
+  private final String logoutUri;
   private final String clientId;
   private final String clientSecret;
   private final String redirectUri;
@@ -43,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
       JwtService jwtService,
       @Value("${keycloak.oauth2.auth-uri}") String baseAuthUri,
       @Value("${keycloak.oauth2.token-uri}") String baseTokenUri,
+      @Value("${keycloak.oauth2.logout-uri}") String logoutUri,
       @Value("${jwt.auth.converter.resource-id}") String clientId,
       @Value("${spring.security.oauth2.client.registration.keycloak.client-secret}")
           String clientSecret,
@@ -53,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
     this.jwtService = jwtService;
     this.baseAuthUri = baseAuthUri;
     this.baseTokenUri = baseTokenUri;
+    this.logoutUri = logoutUri;
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
@@ -76,6 +79,7 @@ public class AuthServiceImpl implements AuthService {
     setCookies(parseAccessToken(result), response);
   }
 
+  @Override
   public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
     String refreshToken = jwtService.getRefreshTokenFromCookie(request);
     if (refreshToken == null) {
@@ -99,6 +103,37 @@ public class AuthServiceImpl implements AuthService {
 
     JwtValues jwtValues = parseAccessToken(result);
     setCookies(jwtValues, response);
+  }
+
+  @Override
+  public void logout(HttpServletRequest request, HttpServletResponse response) {
+    clearCookie("access_token", response);
+    clearCookie("access_token_exp", response);
+    clearCookie("refresh_token", response);
+    clearCookie("refresh_token_exp", response);
+
+    String refreshToken = jwtService.getRefreshTokenFromCookie(request);
+    if (refreshToken != null) {
+      webClient
+          .post()
+          .uri(logoutUri)
+          .header("Content-Type", "application/x-www-form-urlencoded")
+          .body(
+              BodyInserters.fromFormData("client_id", clientId).with("refresh_token", refreshToken))
+          .retrieve()
+          .bodyToMono(Void.class)
+          .block();
+    }
+
+    logger.info("User logged out successfully");
+  }
+
+  private void clearCookie(String name, HttpServletResponse response) {
+    Cookie cookie = new Cookie(name, null);
+    cookie.setPath("/");
+    cookie.setHttpOnly(true);
+    cookie.setMaxAge(0);
+    response.addCookie(cookie);
   }
 
   private URI buildAuthUri() {
