@@ -128,6 +128,13 @@ public class AuthServiceImpl implements AuthService {
     logger.info("User logged out successfully");
   }
 
+  @Override
+  public String getUserId(HttpServletRequest request) {
+    String userId = jwtService.getUserIdFromJwt();
+
+    return userId;
+  }
+
   private void clearCookie(String name, HttpServletResponse response) {
     Cookie cookie = new Cookie(name, null);
     cookie.setPath("/");
@@ -174,8 +181,10 @@ public class AuthServiceImpl implements AuthService {
     String accessExpiresIn = jsonObject.get("expires_in").getAsString();
     String refreshExpiresIn = jsonObject.get("refresh_expires_in").getAsString();
     String idToken = jsonObject.get("id_token").getAsString();
+    String userId = jsonObject.get("sub").getAsString();
 
-    return new JwtValues(accessToken, refreshToken, accessExpiresIn, refreshExpiresIn, idToken);
+    return new JwtValues(
+        accessToken, refreshToken, accessExpiresIn, refreshExpiresIn, idToken, userId);
   }
 
   private void setCookies(JwtValues jwtValues, HttpServletResponse response) {

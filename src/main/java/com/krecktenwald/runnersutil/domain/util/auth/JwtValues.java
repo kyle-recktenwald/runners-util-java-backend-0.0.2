@@ -5,4 +5,5 @@ public record JwtValues(
     String refreshToken,
     String accessExpiresIn,
     String refreshExpiresIn,
-    String idToken) {}
+    String idToken,
+    String userId) {}

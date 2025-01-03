@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -66,6 +67,18 @@ public class AuthController {
     } catch (Exception e) {
       logger.error("Failed to logout", e);
       return ResponseEntity.status(500).body(Map.of("message", "Logout failed"));
+    }
+  }
+
+  @GetMapping("/user-id")
+  @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
+  public ResponseEntity<?> getUserId(HttpServletRequest request) {
+    try {
+      String userId = authService.getUserId(request);
+      return ResponseEntity.ok(Map.of("userId", userId));
+    } catch (Exception e) {
+      logger.error("Failed to get user ID", e);
+      return ResponseEntity.status(401).body(Map.of("message", "Unable to retrieve user ID"));
     }
   }
 }

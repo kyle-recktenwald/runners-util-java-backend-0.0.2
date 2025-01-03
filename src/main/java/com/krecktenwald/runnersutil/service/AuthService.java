@@ -11,4 +11,6 @@ public interface AuthService {
   void refreshToken(HttpServletRequest request, HttpServletResponse response);
 
   void logout(HttpServletRequest request, HttpServletResponse response);
+
+  String getUserId(HttpServletRequest request);
 }
