@@ -1,5 +1,6 @@
 package com.krecktenwald.runnersutil.controller;
 
+import com.krecktenwald.runnersutil.domain.auth.UserInfo;
 import com.krecktenwald.runnersutil.service.AuthService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,12 +71,14 @@ public class AuthController {
     }
   }
 
-  @GetMapping("/user-id")
+  @GetMapping("/user-info")
   @PreAuthorize("hasRole('ROLE_app_admin') or @jwtService.getUserIdFromJwt() == #userId")
   public ResponseEntity<?> getUserId(HttpServletRequest request) {
     try {
-      String userId = authService.getUserId(request);
-      return ResponseEntity.ok(Map.of("userId", userId));
+      UserInfo userInfo = authService.getUserInfo(request);
+
+      return ResponseEntity.ok(
+          Map.of("userId", userInfo.getUserId(), "username", userInfo.getUsername()));
     } catch (Exception e) {
       logger.error("Failed to get user ID", e);
       return ResponseEntity.status(401).body(Map.of("message", "Unable to retrieve user ID"));

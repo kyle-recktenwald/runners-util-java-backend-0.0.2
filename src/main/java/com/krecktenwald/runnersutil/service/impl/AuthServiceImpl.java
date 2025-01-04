@@ -1,5 +1,6 @@
 package com.krecktenwald.runnersutil.service.impl;
 
+import com.krecktenwald.runnersutil.domain.auth.UserInfo;
 import com.krecktenwald.runnersutil.domain.util.auth.JwtValues;
 import com.krecktenwald.runnersutil.security.JwtService;
 import com.krecktenwald.runnersutil.service.AuthService;
@@ -129,10 +130,11 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public String getUserId(HttpServletRequest request) {
+  public UserInfo getUserInfo(HttpServletRequest request) {
     String userId = jwtService.getUserIdFromJwt();
+    String userName = jwtService.getUsernameFromJwt();
 
-    return userId;
+    return new UserInfo(userId, userName);
   }
 
   private void clearCookie(String name, HttpServletResponse response) {

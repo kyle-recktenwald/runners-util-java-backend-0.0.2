@@ -35,6 +35,14 @@ public class JwtService {
     return jwt.getSubject();
   }
 
+  public String getUsernameFromJwt() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Jwt jwt = (Jwt) authentication.getPrincipal();
+    String userName = jwt.getClaim("preferred_username");
+
+    return userName;
+  }
+
   public String getJwtFromCookie(HttpServletRequest request) {
     Cookie[] cookies = request.getCookies();
     if (cookies == null) {

@@ -1,5 +1,6 @@
 package com.krecktenwald.runnersutil.service;
 
+import com.krecktenwald.runnersutil.domain.auth.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -12,5 +13,5 @@ public interface AuthService {
 
   void logout(HttpServletRequest request, HttpServletResponse response);
 
-  String getUserId(HttpServletRequest request);
+  UserInfo getUserInfo(HttpServletRequest request);
 }
